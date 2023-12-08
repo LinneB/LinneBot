@@ -1,0 +1,126 @@
+:root {
+    --background: #222;
+    --header-bg: #333;
+    --text: #ddd;
+    --bot-username: #5f9ea0;
+    --content-background: #1f1f1f;
+    --link-hover-color: #9fc4c8;
+    --hyperlink: #67a9ff;
+    --hyperlink-hover: #3b78c7;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family: "Noto Sans", sans-serif;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: var(--header-bg);
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header a {
+    color: var(--text);
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+header b {
+    font-size: 24px;
+    color: var(--bot-username);
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    padding-left: 10vw;
+}
+
+.header-right {
+    padding-right: 10vw;
+}
+
+.main-content {
+    background: var(--content-background);
+    display: flex;
+    flex-direction: column;
+    max-width: 60vw;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.command-list {
+    background-color: var(--content-background-dark);
+    padding: 5px;
+}
+
+.link {
+    color: var(--text);
+    transition: color 150ms ease;
+}
+
+.link:hover {
+    color: var(--bot-username);
+}
+
+.hyperlink {
+    color: var(--hyperlink);
+    transition: color 100ms ease;
+}
+
+.hyperlink:hover {
+    color: var(--hyperlink-hover);
+}
+
+.title {
+    align-self: center;
+    font-size: 55px;
+    padding: 10px;
+}
+
+.content-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.main-content p {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+.main-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.main-content th,
+.main-content td {
+    border: 1px solid gray;
+    padding: 10px;
+    text-align: left;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}

@@ -1,0 +1,9 @@
+.git
+.gitignore
+.dockerignore
+docker-compose*
+Dockerfile*
+.env
+config.json
+node_modules
+.eslintrc.json

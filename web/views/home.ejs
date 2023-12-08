@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinneBot</title>
+    <link rel="icon" href="/static/images/cokeshakey.gif">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img id="cokeshakey" src="/static/images/cokeshakey.gif" style="height: 30px;">
+            <a href="/"><b>LinneBot</b></a>
+        </div>
+        <div class="header-right">
+            <a class="link" href="/">Home</a>
+            <a class="link" href="/commands">Commands</a>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="content-title">
+            <b class="title" style="color: var(--bot-username);">LinneBot</b>
+            <p class="text">The worst chatbot on Twitch</p>
+            <img id="cokeshakey" src="/static/images/cokeshakey.gif" style="height: 70px" alt="cokeshakey">
+        </div>
+        <div style="align-self: center; padding-bottom: 20px;">
+            <p>Currently in <%= channels.length %> <%= channels.length > 1 ? "channels" : "channel" %> serving <%= Object.keys(commands).length %> commands</p>
+            <p>For a full list of commands, see <a class="hyperlink" href="/commands">/commands</a></p>
+        </div>
+        <div class="social-links">
+            <a href="https://twitch.tv/LinneB" target="_blank">
+                <img src="/static/images/twitch.png" alt="twitch" style="height: 80px;">
+            </a>
+            <a href="https://github.com/LinneB" target="_blank">
+                <img src="/static/images/github.png" alt="github" style="height: 80px;">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("cokeshakey").onclick = function() {
+            location.href = "https://twitch.tv/emiru";
+        };
+    </script>
+</body>
+</html>

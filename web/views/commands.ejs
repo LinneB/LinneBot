@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinneBot</title>
+    <link rel="icon" href="/static/images/cokeshakey.gif">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img id="cokeshakey" src="/static/images/cokeshakey.gif" style="height: 30px;">
+            <a href="/"><b>LinneBot</b></a>
+        </div>
+        <div class="header-right">
+            <a class="link" href="/">Home</a>
+            <a class="link" href="/commands">Commands</a>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <h2>List of commands</h2>
+        <table class="command-list">
+            <th>Name</th>
+            <th>Description</th>
+            <% for (commandName in Object.fromEntries(Object.entries(commands).sort())) { %>
+                <tr>
+                    <td><a href="/commands/<%= commands[commandName].name %>" class="hyperlink"><%= commands[commandName].name %></a></td>
+                    <td><%= commands[commandName].help %></td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById("cokeshakey").onclick = function() {
+            location.href = "https://twitch.tv/emiru";
+        };
+    </script>
+</body>
+</html>
