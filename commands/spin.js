@@ -1,3 +1,4 @@
+const { randomElementInArray } = require("../misc/utils");
 module.exports = {
   name: "spin",
   aliases: ["#spin", "!spin"],
@@ -6,7 +7,7 @@ module.exports = {
   usage: "!spin",
   run: function() {
     const fruits = ["🍋", "🍋", "🍋", "🍒", "🍒", "🍇", "🍇", "🥒", "🥒", "📖"];
-    const result = Array.from({ length: 3 }, () => fruits[Math.floor(Math.random() * fruits.length)]).join(" ");
+    const result = Array.from({ length: 3 }, () => randomElementInArray(fruits)).join(" ");
     return {
       reply: result
     };

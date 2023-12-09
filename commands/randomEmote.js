@@ -15,7 +15,7 @@ module.exports = {
         reply: "This channel does not have any 7tv emotes"
       };
     }
-    const emote = emotes[utils.randomNumber(0, emotes.length - 1)];
+    const emote = utils.randomElementInArray(emotes);
     const timeAgo = utils.formattedTimeAgoString(Date.now() - new Date(emote.timestamp));
     return {
       reply: `${emote.name} (${timeAgo ? timeAgo + " ago" : "just now"})`,
