@@ -6,19 +6,17 @@ module.exports = {
   name: "title",
   aliases: ["#title"],
   cooldown: 3000,
-  help: "Sends the title of a channel.",
-  usage: "#title <channel>",
+  help: "Sends the title of a channel. Defaults to current chat.",
+  usage: "#title [channel]",
   run: async function(ctx) {
-    if (ctx.parameters.length < 1) {
-      return {
-        reply: `Usage: ${this.usage}`
-      };
-    }
-    const userid = await ivr.usernameToID(ctx.parameters[0]);
-    if (!userid) {
-      return {
-        reply: `User ${ctx.parameters[0]} not found`
-      };
+    let userid = ctx.roomID;
+    if (ctx.parameters.length > 0) {
+      userid = await ivr.usernameToID(ctx.parameters[0]);
+      if (!userid) {
+        return {
+          reply: `User ${ctx.parameters[0]} not found`
+        };
+      }
     }
     const res = await helix.axios({
       method: "get",
