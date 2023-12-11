@@ -1,6 +1,7 @@
 const tmiClient = require("../providers/irc");
 const helix = require("../providers/helix");
 const commands = require("../misc/commands");
+const mongodb = require("../providers/mongodb");
 const { getConfig } = require("../misc/config");
 const { log, truncateString } = require("../misc/utils");
 
@@ -26,6 +27,10 @@ function buildMessageContext(msg) {
 
 exports.onChat = async function(msg) {
   const ctx = buildMessageContext(msg);
+  if (!ctx.command.startsWith("#")) {
+    return;
+  }
+  // Interactive command
   const command = commands.getCommandByAlias(ctx.command);
   if (command) {
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
@@ -34,6 +39,17 @@ exports.onChat = async function(msg) {
       if (result?.reply) {
         tmiClient.sendMessage(ctx.roomName, `@${ctx.senderDisplayName}, ${result.reply}`);
       }
+    }
+  }
+  // Static command
+  const channelData = await mongodb.getChannelData(ctx.roomName);
+  for (const command of channelData.commands) {
+    if (command.name !== ctx.command.slice(1)) {
+      continue;
+    }
+    if (commands.isOnCooldown(ctx.senderUserID, command)) {
+      log("info", "Executing " + command.name);
+      tmiClient.sendMessage(ctx.roomName, `@${ctx.senderDisplayName}, ${command.reply}`);
     }
   }
 };
