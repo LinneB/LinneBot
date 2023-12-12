@@ -6,7 +6,8 @@ const { getConfig } = require("../misc/config");
 const { log, truncateString } = require("../misc/utils");
 
 function buildMessageContext(msg) {
-  const args = msg.messageText.split(" ");
+  const args = msg.messageText.split(" ")
+    .filter(c => c.trim());
   const command = args[0].toLowerCase();
 
   return {
