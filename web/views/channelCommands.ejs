@@ -22,6 +22,10 @@
     </header>
 
     <div class="main-content">
+        <div style="display: flex; margin: auto;">
+            <img class="profilepic" src="<%= profilePicURL %>" style="max-width: 5vw; padding-right: 20px;">
+            <h1>List of commands for <%= username %></h1>
+        </div>
         <h2>Interactive commands</h2>
         <table class="command-list">
             <th>Name</th>
@@ -33,6 +37,21 @@
                 </tr>
             <% } %>
         </table>
+        <h2>Static commands</h2>
+        <% if (staticCommands.length >= 1) { %>
+            <table class="command-list">
+                <th>Command</th>
+                <th>Response</th>
+                <% for (command in staticCommands.sort((a, b) => a.name.localeCompare(b.name))) { %>
+                <tr>
+                    <td><%= staticCommands[command].name %></td>
+                    <td><%= staticCommands[command].reply %></td>
+                </tr>
+                <% } %>
+            </table>
+        <% } else { %>
+            <p>...</p>
+        <% } %>
     </div>
 
     <script>
