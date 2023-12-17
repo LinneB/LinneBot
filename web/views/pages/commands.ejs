@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/head") %>
+</head>
+<body>
+    <%- include("../partials/header") %>
+    <div class="main-content">
+        <h2>Interactive commands</h2>
+        <table class="command-list">
+            <th>Name</th>
+            <th>Description</th>
+            <% for (commandName in Object.fromEntries(Object.entries(commands).sort())) { %>
+                <tr>
+                    <td><a href="/command/<%= commands[commandName].name %>" class="hyperlink"><%= commands[commandName].name %></a></td>
+                    <td><%= commands[commandName].help %></td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+</body>
+</html>

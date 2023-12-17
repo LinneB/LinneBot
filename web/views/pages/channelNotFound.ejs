@@ -22,23 +22,9 @@
     </header>
 
     <div class="main-content">
-        <h2>Interactive commands</h2>
-        <table class="command-list">
-            <th>Name</th>
-            <th>Description</th>
-            <% for (commandName in Object.fromEntries(Object.entries(commands).sort())) { %>
-                <tr>
-                    <td><a href="/command/<%= commands[commandName].name %>" class="hyperlink"><%= commands[commandName].name %></a></td>
-                    <td><%= commands[commandName].help %></td>
-                </tr>
-            <% } %>
-        </table>
+        <h1>Channel not found</h1>
+        <img id="catnotl" src="https://cdn.7tv.app/emote/635c919e139df25e02d6801d/3x.gif" style="max-width: 100px">
+        <a class="hyperlink" href="/commands">Back to commands</a>
     </div>
-
-    <script>
-        document.getElementById("cokeshakey").onclick = function() {
-            location.href = "https://twitch.tv/emiru";
-        };
-    </script>
 </body>
 </html>

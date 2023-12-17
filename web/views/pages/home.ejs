@@ -1,26 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>LinneBot</title>
-    <link rel="icon" href="/static/images/cokeshakey.gif">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
-    <link href="/static/css/common.css" rel="stylesheet">
+    <%- include("../partials/head") %>
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <img id="cokeshakey" src="/static/images/cokeshakey.gif" style="height: 30px;">
-            <a href="/"><b>LinneBot</b></a>
-        </div>
-        <div class="header-right">
-            <a class="link" href="/">Home</a>
-            <a class="link" href="/commands">Commands</a>
-        </div>
-    </header>
-
+    <%- include("../partials/header") %>
     <div class="main-content">
         <div class="content-title">
             <b class="title" style="color: var(--bot-username);">LinneBot</b>
@@ -40,11 +24,5 @@
             </a>
         </div>
     </div>
-
-    <script>
-        document.getElementById("cokeshakey").onclick = function() {
-            location.href = "https://twitch.tv/emiru";
-        };
-    </script>
 </body>
 </html>
