@@ -4,6 +4,8 @@ const path = require("path");
 const { getConfig } = require("../misc/config");
 const { log } = require("../misc/utils");
 const commands = require("../misc/commands");
+const mongodb = require("../providers/mongodb");
+const ivr = require("../providers/ivr");
 const webConfig = getConfig("web");
 const port = webConfig["port"] || 8080;
 
@@ -18,18 +20,41 @@ app.get("/", (req, res) => {
     commands: commands.commands,
   });
 });
+
 app.get("/commands", (req, res) => {
   res.render("commands", {
     commands: commands.commands,
   });
 });
-app.get("/commands/:command", (req, res) => {
+
+app.get("/command/:command", (req, res) => {
   const command = commands.getCommandByName(req.params.command);
   if (!command) {
     res.status(404).render("commandNotFound");
   } else {
     res.render("commandDetails", {
       command: command,
+    });
+  }
+});
+
+app.get("/commands/:channel", async (req, res) => {
+  const channel = req.params.channel || "";
+  if (!getConfig("channels").includes(channel.toLowerCase())) {
+    res.status(404).render("channelNotFound");
+    return;
+  }
+  const channelData = await mongodb.ChannelModel.findOne({ channel: channel });
+  if (!channelData) {
+    res.status(404).render("channelNotFound");
+    return;
+  } else {
+    const channelInfo = await ivr.getUser(channel);
+    res.render("channelCommands", {
+      commands: commands.commands,
+      staticCommands: channelData.commands,
+      username: channel,
+      profilePicURL: channelInfo.logo,
     });
   }
 });

@@ -19,6 +19,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 You will need a few things to set it up:
 
 - A [Twitch app](https://dev.twitch.tv/console)
+- A [MongoDB](https://hub.docker.com/_/mongo) database
 - A user access token with scopes: `chat:read chat:edit moderator:manage:chat_messages`
 - An HTTPS endpoint (you can use [ngrok](https://ngrok.com/) to simplify this)
 
@@ -39,6 +40,9 @@ BOT_USERNAME="linnebot"
 # EventSub details
 BASE_URL="https://example.com"
 WEBHOOK_SECRET="thisisarandomstring"
+
+# Database URL
+MONGODB_URL="mongodb://user:pass@localhost:27017/linnebot"
 ```
 
 Fill `config.json` with the rest of your options:
