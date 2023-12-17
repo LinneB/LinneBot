@@ -1,5 +1,5 @@
 const mongodb = require("../providers/mongodb");
-const { getCommandByAlias } = require("../misc/commands");
+const commands = require("../misc/commands");
 const { log } = require("../misc/utils");
 
 module.exports = {
@@ -43,7 +43,7 @@ module.exports = {
           };
         }
       }
-      if (getCommandByAlias(`#${commandName}`)) {
+      if (commands.getCommandByAlias(`#${commandName}`)) {
         return {
           reply: `${commandName} is already a command`
         };
