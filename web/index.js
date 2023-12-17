@@ -15,14 +15,14 @@ app.set("view engine", "ejs");
 app.use(morgan(':req[x-real-ip] - [:date] ":method :url HTTP/:http-version" STATUS :status  ":referrer" ":user-agent"')); // eslint-disable-line quotes
 
 app.get("/", (req, res) => {
-  res.render("home", {
+  res.render("pages/home", {
     channels: getConfig("channels"),
     commands: commands.commands,
   });
 });
 
 app.get("/commands", (req, res) => {
-  res.render("commands", {
+  res.render("pages/commands", {
     commands: commands.commands,
   });
 });
@@ -30,9 +30,9 @@ app.get("/commands", (req, res) => {
 app.get("/command/:command", (req, res) => {
   const command = commands.getCommandByName(req.params.command);
   if (!command) {
-    res.status(404).render("commandNotFound");
+    res.status(404).render("pages/commandNotFound");
   } else {
-    res.render("commandDetails", {
+    res.render("pages/commandDetails", {
       command: command,
     });
   }
@@ -41,16 +41,16 @@ app.get("/command/:command", (req, res) => {
 app.get("/commands/:channel", async (req, res) => {
   const channel = req.params.channel || "";
   if (!getConfig("channels").includes(channel.toLowerCase())) {
-    res.status(404).render("channelNotFound");
+    res.status(404).render("pages/channelNotFound");
     return;
   }
   const channelData = await mongodb.ChannelModel.findOne({ channel: channel });
   if (!channelData) {
-    res.status(404).render("channelNotFound");
+    res.status(404).render("pages/channelNotFound");
     return;
   } else {
     const channelInfo = await ivr.getUser(channel);
-    res.render("channelCommands", {
+    res.render("pages/channelCommands", {
       commands: commands.commands,
       staticCommands: channelData.commands,
       username: channel,

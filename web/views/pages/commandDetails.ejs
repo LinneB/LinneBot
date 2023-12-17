@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/head") %>
+</head>
+<body>
+    <%- include("../partials/header") %>
+    <div class="main-content">
+        <h2><%= command.name %></h2>
+        <p><%= command.help %></p>
+        <p>Usage: <%= command.usage %></p>
+        <p>Cooldown: <%= command.cooldown / 1000 %>s</p>
+        <p>Aliases:</p>
+        <ul style="margin: 0px;">
+        <% for (alias of command.aliases) { %>
+            <li><%= alias %></li>
+        <% } %>
+        </ul>
+        <a class="hyperlink" href="javascript:window.history.back();">Back to commands</a>
+    </div>
+</body>
+</html>
