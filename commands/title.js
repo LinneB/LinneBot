@@ -4,7 +4,7 @@ const { log } = require("../misc/utils");
 
 module.exports = {
   name: "title",
-  aliases: ["#title"],
+  aliases: ["title"],
   cooldown: 3000,
   help: "Sends the title of a channel. Defaults to current chat.",
   usage: "#title [channel]",

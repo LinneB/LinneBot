@@ -3,7 +3,7 @@ const { log } = require("../misc/utils");
 
 module.exports = {
   name: "randomLog",
-  aliases: ["#randomlog", "#rl"],
+  aliases: ["randomlog", "rl"],
   cooldown: 3000,
   help: "Gets a random log of a user in a channel from https://logs.ivr.fi",
   usage: "#randomlog <username> <channel>",

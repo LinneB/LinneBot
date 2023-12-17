@@ -2,7 +2,7 @@ const decapi = require("../providers/decapi");
 
 module.exports = {
   name: "youtube",
-  aliases: ["#youtube", "#yt"],
+  aliases: ["youtube", "yt"],
   cooldown: 5000,
   help: "Gets a youtube link based off the given search query.",
   usage: "#youtube <search>",

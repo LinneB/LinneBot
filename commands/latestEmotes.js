@@ -4,7 +4,7 @@ const utils = require("../misc/utils");
 
 module.exports = {
   name: "latestEmotes",
-  aliases: ["#latestemotes", "#le"],
+  aliases: ["latestemotes", "le"],
   cooldown: 3000,
   help: "Sends the 5 most recent 7TV emotes in a given channel. Defaults to current chat.",
   usage: "#latestemotes [user]",

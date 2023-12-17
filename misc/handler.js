@@ -27,8 +27,9 @@ function buildMessageContext(msg) {
 }
 
 exports.onChat = async function(msg) {
+  const prefix = getConfig("prefix");
   const ctx = buildMessageContext(msg);
-  if (!ctx.command.startsWith("#")) {
+  if (!ctx.command.startsWith(prefix)) {
     return;
   }
   // Interactive command

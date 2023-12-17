@@ -2,7 +2,7 @@ const commands = require("../misc/commands");
 
 module.exports = {
   name: "help",
-  aliases: ["#help", "#usage"],
+  aliases: ["help", "usage"],
   cooldown: 1000,
   help: "Sends info and usage of a command.",
   usage: "#help <command>",

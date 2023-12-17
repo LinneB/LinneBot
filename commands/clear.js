@@ -3,7 +3,7 @@ const ivr = require("../providers/ivr");
 
 module.exports = {
   name: "clear",
-  aliases: ["#clear", "#1984"],
+  aliases: ["clear", "1984"],
   cooldown: 1000,
   help: "Deletes chat. Mod required.",
   usage: "#clear",

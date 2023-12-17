@@ -3,7 +3,7 @@ const utils = require("../misc/utils");
 
 module.exports = {
   name: "randomEmote",
-  aliases: ["#randomemote", "#re"],
+  aliases: ["randomemote", "re"],
   cooldown: 3000,
   help: "Sends a random emote from the current channel.",
   usage: "#randomemote",

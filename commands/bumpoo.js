@@ -2,7 +2,7 @@ const justlog = require("../providers/justlog");
 
 module.exports = {
   name: "bumpoo",
-  aliases: ["#bumpoo"],
+  aliases: ["bumpoo"],
   cooldown: 1000,
   help: "Gets a random bumpoo27 log from sennyk4's chat.",
   usage: "#bumpoo",

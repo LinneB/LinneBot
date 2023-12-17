@@ -1,11 +1,12 @@
 const mongodb = require("../providers/mongodb");
 const commands = require("../misc/commands");
 const { log } = require("../misc/utils");
+const { getConfig } = require("../misc/config");
 
 module.exports = {
   name: "cmd",
   cooldown: 1000,
-  aliases: ["#command", "#cmd"],
+  aliases: ["command", "cmd"],
   help: "Adds/removes commands from the current chat. Mod required.",
   usage: "#cmd <add|remove> <name> [reply]",
   run: async function(ctx) {
@@ -43,7 +44,8 @@ module.exports = {
           };
         }
       }
-      if (commands.getCommandByAlias(`#${commandName}`)) {
+      const prefix = getConfig("prefix");
+      if (commands.getCommandByAlias(prefix + commandName)) {
         return {
           reply: `${commandName} is already a command`
         };

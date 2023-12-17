@@ -1,7 +1,7 @@
 module.exports = {
   name: "temperature",
   cooldown: 1000,
-  aliases: ["#ctof", "#ftoc"],
+  aliases: ["ctof", "ftoc"],
   help: "Converts temperature.",
   usage: "#ctof <temperature>",
   run: function(ctx) {

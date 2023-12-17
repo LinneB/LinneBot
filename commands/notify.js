@@ -3,7 +3,7 @@ const { getConfig, setConfig } = require("../misc/config");
 module.exports = {
   name: "notify",
   cooldown: 1000,
-  aliases: ["#notify"],
+  aliases: ["notify"],
   help: "Subscribe/unsubscribe to a live notification.",
   usage: "#notify <channel>",
   run: function(ctx) {

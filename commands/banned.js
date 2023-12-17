@@ -2,7 +2,7 @@ const ivr = require("../providers/ivr");
 
 module.exports = {
   name: "banned",
-  aliases: ["#banned", "#isbanned"],
+  aliases: ["banned", "isbanned"],
   cooldown: 3000,
   help: "Checks if a user is banned from Twitch.",
   usage: "#banned <user>",

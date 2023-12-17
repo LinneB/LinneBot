@@ -2,7 +2,7 @@ const ivr = require("../providers/ivr");
 
 module.exports = {
   name: "followers",
-  aliases: ["#followers", "#followcount"],
+  aliases: ["followers", "followcount"],
   cooldown: 3000,
   help: "Sends the follower count of a user. Defaults to sender username.",
   usage: "#followers [user]",

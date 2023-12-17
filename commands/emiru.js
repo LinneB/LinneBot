@@ -2,7 +2,7 @@ const decapi = require("../providers/decapi");
 
 module.exports = {
   name: "emiru",
-  aliases: ["#emiru"],
+  aliases: ["emiru"],
   cooldown: 5000,
   help: "Sends the latest emiru youtube video.",
   usage: "#emiru",

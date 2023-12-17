@@ -3,7 +3,7 @@ const { log } = require("../misc/utils");
 
 module.exports = {
   name: "live",
-  aliases: ["#live", "#stream"],
+  aliases: ["live", "stream"],
   cooldown: 3000,
   help: "Sends information about a stream.",
   usage: "#live <user>",

@@ -1,6 +1,6 @@
 module.exports = {
   name: "commands",
-  aliases: ["#commands"],
+  aliases: ["commands"],
   cooldown: 1000,
   help: "Sends the list of enabled commands in the current channel.",
   usage: "#commands",

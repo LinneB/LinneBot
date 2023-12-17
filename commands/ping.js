@@ -4,7 +4,7 @@ const tmiClient = require("../providers/irc");
 module.exports = {
   name: "ping",
   cooldown: 1000,
-  aliases: ["#ping", "#uptime"],
+  aliases: ["ping", "uptime"],
   help: "Sends uptime and chat information.",
   usage: "#ping",
   run: async function() {

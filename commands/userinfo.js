@@ -2,7 +2,7 @@ const ivr = require("../providers/ivr");
 
 module.exports = {
   name: "userinfo",
-  aliases: ["#userinfo", "#info", "#id"],
+  aliases: ["userinfo", "info", "id"],
   cooldown: 3000,
   help: "Gets some information about a user.",
   usage: "#userinfo <user>",

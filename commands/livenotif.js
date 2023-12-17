@@ -5,7 +5,7 @@ const ivr = require("../providers/ivr");
 module.exports = {
   name: "livenotif",
   cooldown: 1000,
-  aliases: ["#livenotif"],
+  aliases: ["livenotif"],
   help: "Adds/removes channels from livenotif. Admin required.",
   usage: "#livenotif <add|remove> <channel>",
   run: async function(ctx) {

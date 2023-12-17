@@ -4,7 +4,7 @@ const { log } = require("../misc/utils");
 
 module.exports = {
   name: "thumbnail",
-  aliases: ["#thumbnail"],
+  aliases: ["thumbnail"],
   cooldown: 3000,
   help: "Gets the thumbnail of a stream.",
   usage: "#thumbnail <channel>",
