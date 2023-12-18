@@ -11,3 +11,9 @@ For major changes, you can contact me on [Twitch](https://twitch.tv/LinneB) or y
 Make sure to run `npm run lint` before commiting your changes.
 
 As for code style, there's no enforced style guide. But you can look through the source code to get the *general* idea.
+
+### Conventional commits
+
+When commiting, make sure to follow the [Conventional Commits](https://www.conventionalcommits.org) convention.
+
+When opening issues and pull requests, make sure to tag it properly (feature request, question, etc.)
