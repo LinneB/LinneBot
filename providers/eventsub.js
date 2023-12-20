@@ -72,7 +72,9 @@ tes.unsubscribeUnused = async function() {
 // Gets all subscribed channels from database
 async function subscribeToChannels() {
   const channels = getConfig("channels");
-  const channelsData = await mongodb.ChannelModel.find({ "channel": { $in: channels } });
+  const channelsData = await Promise.all(channels.map(channel => {
+    return mongodb.getChannelData(channel);
+  }));
   const subscribedChannels = [];
   for (const channelData of channelsData) {
     for (const sub of channelData.subscriptions) {
@@ -80,6 +82,9 @@ async function subscribeToChannels() {
         subscribedChannels.push(sub.channel);
       }
     }
+  }
+  if (subscribedChannels.length < 1) {
+    return;
   }
   const res = await ivr.axios({
     method: "get",
