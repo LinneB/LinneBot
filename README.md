@@ -54,8 +54,6 @@ Fill `config.json` with the rest of your options:
     "channels": [
         "linneb"
     ],
-    // channels to send live notifications in
-    "channelToNotify": "linneb",
     "web": {
         // port to host website and EventSub on
         "port": 8080

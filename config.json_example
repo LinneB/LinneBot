@@ -3,7 +3,6 @@
     "channels": [
         "linneb"
     ],
-    "channelToNotify": "linneb",
     "web": {
         "port": 8080
     }
