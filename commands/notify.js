@@ -1,4 +1,4 @@
-const { getConfig, setConfig } = require("../misc/config");
+const mongodb = require("../providers/mongodb");
 
 module.exports = {
   name: "notify",
@@ -6,32 +6,37 @@ module.exports = {
   aliases: ["notify"],
   help: "Subscribe/unsubscribe to a live notification.",
   usage: "#notify <channel>",
-  run: function(ctx) {
+  run: async function(ctx) {
     if (ctx.parameters.length < 1) {
       return {
         reply: `Usage: ${this.usage}`
       };
     }
-    const livenotif = getConfig("livenotif");
     const channel = ctx.parameters[0].toLowerCase();
-    if (Object.keys(livenotif).includes(channel)) {
-      if (livenotif[channel].includes(ctx.senderUsername)) {
-        livenotif[channel] = livenotif[channel].filter(e => e !== ctx.senderUsername);
-        setConfig("livenotif", livenotif);
+    const channelData = await mongodb.getChannelData(ctx.roomName);
+
+    for (const sub of channelData.subscriptions) {
+      if (sub.channel !== channel) {
+        continue;
+      }
+      if (sub.subscribers.includes(ctx.senderUsername)) {
+        // unsubscribe user
+        sub.subscribers = sub.subscribers.filter(u => u !== ctx.senderUsername);
+        channelData.save();
         return {
           reply: `Unsubscribed from ${channel}. You will no longer be notified when they go live`
         };
       } else {
-        livenotif[channel].push(ctx.senderUsername);
-        setConfig("livenotif", livenotif);
+        // subscribe user
+        sub.subscribers.push(ctx.senderUsername);
+        channelData.save();
         return {
           reply: `Subscribed to ${channel}. You will be notified when they go live`
         };
       }
-    } else {
-      return {
-        reply: "Channel is not being tracked"
-      };
     }
+    return {
+      reply: `This chat is not subscribed to ${channel}, you can subscribe to it using #livenotif add ${channel}`,
+    };
   }
 };

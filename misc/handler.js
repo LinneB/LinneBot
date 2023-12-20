@@ -3,7 +3,7 @@ const helix = require("../providers/helix");
 const commands = require("../misc/commands");
 const mongodb = require("../providers/mongodb");
 const { getConfig } = require("../misc/config");
-const { log, truncateString } = require("../misc/utils");
+const { log, makeStreamOnlineMessages } = require("../misc/utils");
 
 function buildMessageContext(msg) {
   const args = msg.messageText.split(" ")
@@ -55,21 +55,41 @@ exports.onChat = async function(msg) {
     }
   }
 };
+
 exports.onReady = () => log("info", "Connected to twitch");
+
 exports.streamOnline  = async function(event) {
-  const livenotif = getConfig("livenotif");
-  const users = livenotif[event.broadcaster_user_login.toLowerCase()];
+  const channels = getConfig("channels");
+  const streamUsername = event.broadcaster_user_login.toLowerCase();
+  const streamUserID = event.broadcaster_user_id;
+
+  const subscribedChats = {};
+  const channelsData = await mongodb.ChannelModel.find({ "channel": { $in: channels } });
+  for (const channelData of channelsData) {
+    for (const sub of channelData.subscriptions) {
+      if (sub.channel === streamUsername) {
+        subscribedChats[channelData.channel] = sub.subscribers;
+      }
+    }
+  }
+
   const res = await helix.axios({
     method: "get",
-    url: "/channels?broadcaster_id=" + event.broadcaster_user_id,
+    url: `/channels?broadcaster_id=${streamUserID}`,
   });
   if (res.status === 200) {
     const { game_name, title } = res.data.data[0];
-    const message = `${users.join(", ")} https://twitch.tv/${event.broadcaster_user_login} just went live playing ${game_name}! ${title}`;
-    tmiClient.sendMessage(getConfig("channelToNotify"), truncateString(message, 400));
+    const streamMessage = `https://twitch.tv/${streamUsername} just went live playing ${game_name}! ${title}`;
+    for (const [chat, subs] of Object.entries(subscribedChats)) {
+      const messages = makeStreamOnlineMessages(streamMessage, subs);
+      messages.forEach(m => tmiClient.sendMessage(chat, m));
+    }
   } else {
     log("error", `Helix returned unexpected status code ${res.status}`);
-    const message = `https://twitch.tv/${event.broadcaster_user_login} just went live! ${users.join(", ")}`;
-    tmiClient.sendMessage(getConfig("channelToNotify"), truncateString(message, 400));
+    const streamMessage = `https://twitch.tv/${streamUsername} just went live!`;
+    for (const [chat, subs] of Object.entries(subscribedChats)) {
+      const messages = makeStreamOnlineMessages(streamMessage, subs);
+      messages.forEach(m => tmiClient.sendMessage(chat, m));
+    }
   }
 };

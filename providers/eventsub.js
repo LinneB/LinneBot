@@ -1,6 +1,7 @@
 const TES = require("tesjs");
 const { log } = require("../misc/utils");
 const ivr = require("./ivr");
+const mongodb = require("./mongodb");
 const { getConfig } = require("../misc/config");
 const { expressApp } = require("../web");
 const { streamOnline } = require("../misc/handler");
@@ -22,27 +23,72 @@ const tes = new TES({
 
 tes.on("stream.online", streamOnline);
 
-(async () => {
-  const livenotif = getConfig("livenotif");
+// Creates subscription for `userid` if none exists
+tes.subscribeIfNot = async function(userIDs = []) {
+  const subscriptions = await this.getSubscriptionsByStatus("enabled");
+  const subscribedIDs = subscriptions.data.map(sub => sub.condition.broadcaster_user_id);
+  for (const userid of userIDs) {
+    if (!subscribedIDs.includes(userid)) {
+      tes.subscribe("stream.online", { broadcaster_user_id: userid }).then(() => {
+        log("debug", `Subscription created for ${userid}`);
+      }).catch((err) => {
+        log("error", `Could not subscribe to ${userid}`, err);
+      });
+    } else {
+      log("debug", `Subscription for ${userid} already exists, skipping`);
+    }
+  }
+};
+
+// Removes subscriptions that are not used by any chat
+tes.unsubscribeUnused = async function() {
+  const channels = getConfig("channels");
+  const channelsData = await mongodb.ChannelModel.find({ "channel": { $in: channels } });
+  const subscribedChannels = new Set();
+  for (const channelData of channelsData) {
+    channelData.subscriptions.forEach(sub => subscribedChannels.add(sub.channel));
+  }
+
   const res = await ivr.axios({
     method: "get",
-    url: `/twitch/user?login=${Object.keys(livenotif).join("%2C")}`
+    url: `/twitch/user?login=${[...subscribedChannels].join("%2C")}`
   });
-  const channels = res.data.map(user => user.id);
-  if (channels.length != Object.keys(livenotif).length) {
-    log("error", "Could not get userID for one or more channels in livenotif");
-    process.exit(0);
+  if (res.status !== 200) {
+    log("error", `IVR returned unexpected status code ${res.status}`);
+    return;
   }
-  log("info", `Subscribing to ${channels.length} ${channels.length > 1 ? "channels" : "channel"}`);
-  for (const channel of channels) {
-    tes.subscribe("stream.online", {
-      broadcaster_user_id: channel
-    }).then(() => {
-      log("INFO", `Created subscribtion for ${channel}`);
-    }).catch((err) => {
-      log("warn", err);
-    });
+  const subscribedIDs = res.data.map(user => user.id);
+  const subscriptions = await this.getSubscriptionsByStatus("enabled");
+  subscriptions.data.forEach(sub => {
+    const channelID = sub.condition.broadcaster_user_id;
+    if (!subscribedIDs.includes(channelID)) {
+      this.unsubscribe(sub.id).then(() => {
+        log("info", `Unsubscribed from unused channel ${channelID}`);
+      });
+    }
+  });
+};
+
+// Gets all subscribed channels from database
+async function subscribeToChannels() {
+  const channels = getConfig("channels");
+  const channelsData = await mongodb.ChannelModel.find({ "channel": { $in: channels } });
+  const subscribedChannels = [];
+  for (const channelData of channelsData) {
+    for (const sub of channelData.subscriptions) {
+      if (!subscribedChannels.includes(sub.channel)) {
+        subscribedChannels.push(sub.channel);
+      }
+    }
   }
-})();
+  const res = await ivr.axios({
+    method: "get",
+    url: `/twitch/user?login=${subscribedChannels.join("%2C")}`
+  });
+  const channelIDs = res.data.map(user => user.id);
+  log("info", `Subscribing to ${channelIDs.length} ${channelIDs.length > 1 ? "channels" : "channel"}`);
+  tes.subscribeIfNot(channelIDs);
+}
+subscribeToChannels();
 
 module.exports = tes;
