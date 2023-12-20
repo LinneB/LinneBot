@@ -54,10 +54,8 @@ Fill `config.json` with the rest of your options:
     "channels": [
         "linneb"
     ],
-    "web": {
-        // port to host website and EventSub on
-        "port": 8080
-    }
+    // port to host website and EventSub on
+    "port": 8080
 }
 ```
 

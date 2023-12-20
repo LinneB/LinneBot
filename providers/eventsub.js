@@ -16,7 +16,7 @@ const tes = new TES({
     baseURL: process.env.BASE_URL,
     secret: process.env.WEBHOOK_SECRET,
     server: expressApp,
-    port: getConfig("web")["port"],
+    port: getConfig("port"),
   },
   options: { debug: getConfig("debug") || false }
 });

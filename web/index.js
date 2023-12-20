@@ -6,8 +6,7 @@ const { log } = require("../misc/utils");
 const commands = require("../misc/commands");
 const mongodb = require("../providers/mongodb");
 const ivr = require("../providers/ivr");
-const webConfig = getConfig("web");
-const port = webConfig["port"] || 8080;
+const port = getConfig("port") || 8080;
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
