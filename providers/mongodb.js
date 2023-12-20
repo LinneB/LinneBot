@@ -3,6 +3,10 @@ const { log } = require("../misc/utils");
 
 const ChannelSchema = new mongoose.Schema({
   channel: { type: String, required: true },
+  subscriptions: [{
+    channel: { type: String, required: true },
+    subscribers: { type: [String], default: [] }
+  }],
   commands: [{
     name: { type: String },
     reply: { type: String },

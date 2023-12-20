@@ -1,16 +1,16 @@
-const { getConfig, setConfig } = require("../misc/config");
 const { log } = require("../misc/utils");
 const ivr = require("../providers/ivr");
+const mongodb = require("../providers/mongodb");
 
 module.exports = {
   name: "livenotif",
   cooldown: 1000,
   aliases: ["livenotif"],
-  help: "Adds/removes channels from livenotif. Admin required.",
+  help: "Adds/removes channels from livenotif. Mod required.",
   usage: "#livenotif <add|remove> <channel>",
   run: async function(ctx) {
     const tes = require("../providers/eventsub");
-    if (!getConfig("admins").includes(ctx.senderUsername)) {
+    if (!ctx.isMod && !ctx.broadcaster && ctx.senderUsername != "linneb") {
       return;
     }
     if (ctx.parameters.length < 2) {
@@ -18,7 +18,6 @@ module.exports = {
         reply: `Usage: ${this.usage}`
       };
     }
-    const livenotif = getConfig("livenotif");
     const subCommand = ctx.parameters[0].toLowerCase();
     const channel = ctx.parameters[1].toLowerCase();
     const userid = await ivr.usernameToID(channel);
@@ -28,39 +27,33 @@ module.exports = {
       };
     }
     if (subCommand === "add") {
-      if (channel in livenotif) {
+      const channelData = await mongodb.getChannelData(ctx.roomName);
+      if (channelData.subscriptions.some(sub => sub.channel === channel)) {
         return {
-          reply: `${channel} is already in livenotif`
+          reply: `This chat is already subscribed to ${channel}. Use #notify ${channel} to be notified when they go live`
         };
       }
-      try {
-        log("info", `Adding ${channel} to livenotif (issued by ${ctx.senderDisplayName})`);
-        await tes.subscribe("stream.online", { broadcaster_user_id: userid });
-        livenotif[channel] = [];
-        setConfig("livenotif", livenotif);
-        return {
-          reply: `Subscribed to ${channel}`
-        };
-      } catch (err) {
-        log("error", err);
-      }
+      log("info", `Subscribing to ${channel} in ${ctx.roomName} (issued by ${ctx.senderDisplayName})`);
+      await tes.subscribeIfNot([userid]);
+      channelData.subscriptions.push({ channel: channel });
+      await channelData.save();
+      return {
+        reply: `Subscribed to ${channel}`
+      };
     } else if (subCommand === "remove") {
-      if (!(channel in livenotif)) {
+      const channelData = await mongodb.getChannelData(ctx.roomName);
+      if (!(channelData.subscriptions.some(sub => sub.channel === channel))) {
         return {
-          reply: `${channel} is not in livenotif`
+          reply: `This chat is not subscribed to ${channel}`
         };
       }
-      try {
-        log("info", `Removing ${channel} from livenotif (issued by ${ctx.senderDisplayName})`);
-        await tes.unsubscribe("stream.online", { broadcaster_user_id: userid });
-        delete livenotif[channel];
-        setConfig("livenotif", livenotif);
-        return {
-          reply: `Unsubscribed from ${channel}`
-        };
-      } catch (err) {
-        log("error", err);
-      }
+      log("info", `Unsubscribing from ${channel} in ${ctx.roomName} (issued by ${ctx.senderDisplayName})`);
+      channelData.subscriptions = channelData.subscriptions.filter(sub => sub.channel !== channel);
+      await channelData.save();
+      await tes.unsubscribeUnused();
+      return {
+        reply: `Unsubscribed from ${channel}`
+      };
     }
   }
 };

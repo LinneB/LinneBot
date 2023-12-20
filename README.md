@@ -56,24 +56,9 @@ Fill `config.json` with the rest of your options:
     ],
     // channels to send live notifications in
     "channelToNotify": "linneb",
-    // chatters with elevated priveleges
-    "admins": [
-        "linneb"
-    ],
     "web": {
         // port to host website and EventSub on
         "port": 8080
-    },
-    // live notification options
-    "livenotif": {
-        // "channel": [users to notify]
-        "linneb": [
-            "linneb",
-            "linnebot",
-        ],
-        "forsen": [
-            "linneb"
-        ]
     }
 }
 ```

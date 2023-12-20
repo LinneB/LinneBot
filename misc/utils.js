@@ -65,3 +65,19 @@ exports.randomNumber = function(min, max) {
 exports.randomElementInArray = function(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
+
+exports.makeStreamOnlineMessages = function(streamMessage, users) {
+  const messages = [];
+  let buf = streamMessage;
+  for (const user of users) {
+    const combinedMessage = `${buf} ${user}`;
+    if (combinedMessage.length > 450) {
+      messages.push(buf.trim());
+      buf = user;
+    } else {
+      buf = `${buf} ${user}`;
+    }
+  }
+  messages.push(buf.trim());
+  return messages;
+};

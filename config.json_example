@@ -4,16 +4,7 @@
         "linneb"
     ],
     "channelToNotify": "linneb",
-    "admins": [
-        "linneb"
-    ],
     "web": {
         "port": 8080
-    },
-    "livenotif": {
-        "linneb": [
-            "linneb",
-            "linnebot",
-        ]
     }
 }
