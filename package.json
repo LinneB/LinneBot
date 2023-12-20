@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "LinneB",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "eslint": "^8.50.0",
     "nodemon": "^3.0.2"
