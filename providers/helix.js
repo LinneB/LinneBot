@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { log } = require("../misc/utils");
+const utils = require("../misc/utils");
 
 exports.axios = axios.create({
   baseURL: "https://api.twitch.tv/helix",
@@ -15,10 +15,10 @@ this.axios.interceptors.response.use(
   async (response) => {
     if (response.status === 401) {
       if (await this.validateToken(process.env.USER_TOKEN)) {
-        log("error", "Helix returned 401 but user token is valid");
+        utils.log("error", "Helix returned 401 but user token is valid");
         return response;
       } else {
-        log("fatal", "Invalid user token");
+        utils.log("fatal", "Invalid user token");
         process.exit(1);
       }
     } else {
@@ -40,40 +40,37 @@ exports.channelsToID = async function(channels) {
       return res.data.data.map((user) => user.id);
     }
   } catch (err) {
-    log("error", err);
+    utils.log("error", err);
     return [];
   }
 };
 
 exports.validateToken = async function(token) {
-  try {
-    const res = await this.axios({
-      baseURL: "https://id.twitch.tv/oauth2/validate",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Client-ID": process.env.CLIENT_ID,
-      }
-    });
-    if (res.status === 200) {
-      const expire_date = new Date(Date.now() + (res.data["expires_in"] * 1000));
-      log("info", `Token is valid, token expires on ${expire_date.toLocaleString("sv-SE")}`);
-      return true;
-    }
-  } catch (err) {
-    if (err.response) {
-      if (err.response.status === 401) {
-        return false;
-      } else {
-        log("error", `Token validation responded with unexpected status code ${err.response.status}: ${err.response}`);
-      }
-    }
+  const res = await axios({
+    baseURL: "https://id.twitch.tv/oauth2/validate",
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Client-ID": process.env.CLIENT_ID,
+    },
+    validateStatus: false,
+  });
+  if (res.status === 200) {
+    const expire_date = new Date(Date.now() + (res.data.expires_in * 1000));
+    const expires_in = utils.formattedTimeAgoString(res.data.expires_in * 1000);
+    utils.log("info", `User token is valid, expires on ${expire_date.toLocaleString("sv-SE")} (${expires_in})`);
+    return true;
+  } else if (res.status === 401) {
+    return false;
+  } else {
+    utils.log("error", `Token validation responded with unexpected status code ${res.status}`);
   }
 };
 
 setInterval(async () => {
-  log("info", "Validating token...");
+  utils.log("info", "Validating token...");
   if (!await this.validateToken(process.env.USER_TOKEN)) {
-    log("fatal", "Invalid user token");
-    process.exit(0);
+    utils.log("fatal", "Invalid user token");
+    process.exit(1);
   }
 }, 1 * 3600 * 1000);
