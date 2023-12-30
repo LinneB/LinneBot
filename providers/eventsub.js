@@ -4,7 +4,6 @@ const ivr = require("./ivr");
 const mongodb = require("./mongodb");
 const { getConfig } = require("../misc/config");
 const { expressApp } = require("../web");
-const { streamOnline } = require("../misc/handler");
 
 const tes = new TES({
   identity: {
@@ -20,8 +19,6 @@ const tes = new TES({
   },
   options: { debug: getConfig("debug") || false }
 });
-
-tes.on("stream.online", streamOnline);
 
 // Creates subscription for `userid` if none exists
 tes.subscribeIfNot = async function(userIDs = []) {
