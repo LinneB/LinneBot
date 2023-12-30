@@ -6,11 +6,11 @@ If you want to make code changes, feel free to fork the repository and open a pu
 
 For major changes, you can contact me on [Twitch](https://twitch.tv/LinneB) or you could open a Github issue with your proposed changes.
 
-### Linting
+### Linting and formatting
 
-Make sure to run `npm run lint` before commiting your changes.
+This project uses [Biome](https://biomejs.dev) for linting and formatting. There are NPM scripts for both if you can't be bothered to install the plugin for your editor.
 
-As for code style, there's no enforced style guide. But you can look through the source code to get the *general* idea.
+**Make sure you run `npm run lint` and `npm run format` before commiting**
 
 ### Conventional commits
 
