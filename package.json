@@ -5,16 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
+    "lint": "biome lint .",
     "start": "node .",
     "build": "docker-compose build",
-    "dev": "nodemon -e js,ejs ."
+    "dev": "nodemon -e js,ejs .",
+    "format": "biome format . --write"
   },
   "keywords": [],
   "author": "LinneB",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.50.0",
+    "@biomejs/biome": "1.4.1",
     "nodemon": "^3.0.2"
   },
   "dependencies": {

@@ -7,7 +7,7 @@ module.exports = {
   aliases: ["ping", "uptime"],
   help: "Sends uptime and chat information.",
   usage: "#ping",
-  run: async function() {
+  run: async () => {
     // Uptime
     const uptime = process.uptime();
     const hours = Math.floor(uptime / 3600);
@@ -15,12 +15,12 @@ module.exports = {
     const seconds = Math.floor(uptime % 60);
     let formattedUptime = "";
     if (hours > 0) {
-      formattedUptime += hours + "h ";
+      formattedUptime += `${hours}h `;
     }
     if (minutes > 0) {
-      formattedUptime += minutes + "m ";
+      formattedUptime += `${minutes}m `;
     }
-    formattedUptime += seconds + "s";
+    formattedUptime += `${seconds}s`;
 
     // Channels
     const channels = getConfig("channels").length;
@@ -31,7 +31,9 @@ module.exports = {
     const latency = Date.now() - currentTime;
 
     return {
-      reply: `Pong! Bot has been up for ${formattedUptime}. Latency to chat: ${latency}ms. Currently in ${channels} ${channels > 1 ? "channels" : "channel"}`,
+      reply: `Pong! Bot has been up for ${formattedUptime}. Latency to chat: ${latency}ms. Currently in ${channels} ${
+        channels > 1 ? "channels" : "channel"
+      }`,
     };
-  }
+  },
 };

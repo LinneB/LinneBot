@@ -11,11 +11,9 @@ function writeConfig() {
   }
 }
 
-exports.getConfig = function(key) {
-  return config[key];
-};
+exports.getConfig = (key) => config[key];
 
-exports.setConfig = function(key, value) {
+exports.setConfig = (key, value) => {
   config[key] = value;
   writeConfig();
 };

@@ -6,8 +6,7 @@ const { getConfig } = require("../misc/config");
 const { log, makeStreamOnlineMessages } = require("../misc/utils");
 
 function buildMessageContext(msg) {
-  const args = msg.messageText.split(" ")
-    .filter(c => c.trim());
+  const args = msg.messageText.split(" ").filter((c) => c.trim());
   const command = args[0].toLowerCase();
 
   return {
@@ -18,7 +17,7 @@ function buildMessageContext(msg) {
     args: args,
     command: command,
     parameters: args.slice(1),
-    broadcaster: (msg.senderUserID === msg.channelID),
+    broadcaster: msg.senderUserID === msg.channelID,
     roomID: msg.channelID,
     roomName: msg.channelName,
     isMod: msg.isMod,
@@ -26,7 +25,7 @@ function buildMessageContext(msg) {
   };
 }
 
-exports.onChat = async function(msg) {
+exports.onChat = async (msg) => {
   const prefix = getConfig("prefix");
   const ctx = buildMessageContext(msg);
   if (!ctx.command.startsWith(prefix)) {
@@ -36,10 +35,13 @@ exports.onChat = async function(msg) {
   const command = commands.getCommandByAlias(ctx.command);
   if (command) {
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
-      log("info", "Executing " + command.name);
+      log("info", `Executing ${command.name}`);
       const result = await command.run(ctx);
       if (result?.reply) {
-        tmiClient.sendMessage(ctx.roomName, `@${ctx.senderDisplayName}, ${result.reply}`);
+        tmiClient.sendMessage(
+          ctx.roomName,
+          `@${ctx.senderDisplayName}, ${result.reply}`,
+        );
       }
     }
   }
@@ -50,21 +52,26 @@ exports.onChat = async function(msg) {
       continue;
     }
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
-      log("info", "Executing " + command.name);
-      tmiClient.sendMessage(ctx.roomName, `@${ctx.senderDisplayName}, ${command.reply}`);
+      log("info", `Executing ${command.name}`);
+      tmiClient.sendMessage(
+        ctx.roomName,
+        `@${ctx.senderDisplayName}, ${command.reply}`,
+      );
     }
   }
 };
 
 exports.onReady = () => log("info", "Connected to twitch");
 
-exports.streamOnline  = async function(event) {
+exports.streamOnline = async (event) => {
   const channels = getConfig("channels");
   const streamUsername = event.broadcaster_user_login.toLowerCase();
   const streamUserID = event.broadcaster_user_id;
 
   const subscribedChats = {};
-  const channelsData = await mongodb.ChannelModel.find({ "channel": { $in: channels } });
+  const channelsData = await mongodb.ChannelModel.find({
+    channel: { $in: channels },
+  });
   for (const channelData of channelsData) {
     for (const sub of channelData.subscriptions) {
       if (sub.channel === streamUsername) {
@@ -82,14 +89,18 @@ exports.streamOnline  = async function(event) {
     const streamMessage = `https://twitch.tv/${streamUsername} just went live playing ${game_name}! ${title}`;
     for (const [chat, subs] of Object.entries(subscribedChats)) {
       const messages = makeStreamOnlineMessages(streamMessage, subs);
-      messages.forEach(m => tmiClient.sendMessage(chat, m));
+      for (const message of messages) {
+        tmiClient.sendMessage(chat, message);
+      }
     }
   } else {
     log("error", `Helix returned unexpected status code ${res.status}`);
     const streamMessage = `https://twitch.tv/${streamUsername} just went live!`;
     for (const [chat, subs] of Object.entries(subscribedChats)) {
       const messages = makeStreamOnlineMessages(streamMessage, subs);
-      messages.forEach(m => tmiClient.sendMessage(chat, m));
+      for (const message of messages) {
+        tmiClient.sendMessage(chat, message);
+      }
     }
   }
 };

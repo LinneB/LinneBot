@@ -6,18 +6,22 @@ module.exports = {
   cooldown: 1000,
   help: "Sends info and usage of a command.",
   usage: "#help <command>",
-  run: function(ctx) {
+  run: (ctx) => {
     if (ctx.parameters.length < 1) {
       return {
-        reply: `Usage: #help <command>. For a full list of commands see https://bot.linneb.xyz/commands/${ctx.roomName}`
+        reply: `Usage: #help <command>. For a full list of commands see https://bot.linneb.xyz/commands/${ctx.roomName}`,
       };
     }
-    const search = ctx.parameters[0].startsWith("#") ? ctx.parameters[0] : "#" + ctx.parameters[0];
+    const search = ctx.parameters[0].startsWith("#")
+      ? ctx.parameters[0]
+      : `#${ctx.parameters[0]}`;
     const command = commands.getCommandByAlias(search);
     if (command) {
       return {
-        reply: `${command.help} Aliases: [${command.aliases.join(", ")}]. Usage: ${command.usage}`
+        reply: `${command.help} Aliases: [${command.aliases.join(
+          ", ",
+        )}]. Usage: ${command.usage}`,
       };
     }
-  }
+  },
 };

@@ -1,4 +1,3 @@
-/* eslint-disable */
-document.getElementById("cokeshakey").onclick = function() {
+document.getElementById("cokeshakey").onclick = () => {
   location.href = "https://twitch.tv/emiru";
 };
