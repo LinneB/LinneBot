@@ -5,14 +5,14 @@ const { getConfig } = require("./config");
 exports.commands = {};
 exports.cooldowns = {};
 
-exports.add = function(command) {
+exports.add = function (command) {
   if (command.name in this.commands) {
     return;
   }
   this.commands[command.name] = command;
 };
 
-exports.getCommandByAlias = function(alias) {
+exports.getCommandByAlias = function (alias) {
   const prefix = getConfig("prefix");
   for (const commandName in this.commands) {
     const command = this.commands[commandName];
@@ -25,7 +25,7 @@ exports.getCommandByAlias = function(alias) {
   return null;
 };
 
-exports.isOnCooldown = function(userid, command) {
+exports.isOnCooldown = function (userid, command) {
   const currentTime = Date.now();
   if (!this.cooldowns[command.name]) {
     this.cooldowns[command.name] = {};
@@ -34,15 +34,14 @@ exports.isOnCooldown = function(userid, command) {
     if (currentTime - this.cooldowns[command.name][userid] > command.cooldown) {
       this.cooldowns[command.name][userid] = currentTime;
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
   this.cooldowns[command.name][userid] = currentTime;
   return true;
 };
 
-exports.getCommandByName = function(name) {
+exports.getCommandByName = function (name) {
   for (const commandName in this.commands) {
     const command = this.commands[commandName];
     if (command.name.toLowerCase() === name.toLowerCase()) {
@@ -52,8 +51,9 @@ exports.getCommandByName = function(name) {
   return null;
 };
 
-const files = fs.readdirSync(path.join(__dirname, "../commands"))
-  .filter(file => file.endsWith(".js"));
+const files = fs
+  .readdirSync(path.join(__dirname, "../commands"))
+  .filter((file) => file.endsWith(".js"));
 for (const file of files) {
   this.add(require(path.join(__dirname, "../commands", file)));
 }

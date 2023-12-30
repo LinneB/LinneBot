@@ -8,13 +8,13 @@ module.exports = {
   cooldown: 3000,
   help: "Sends the title of a channel. Defaults to current chat.",
   usage: "#title [channel]",
-  run: async function(ctx) {
+  run: async (ctx) => {
     let userid = ctx.roomID;
     if (ctx.parameters.length > 0) {
       userid = await ivr.usernameToID(ctx.parameters[0]);
       if (!userid) {
         return {
-          reply: `User ${ctx.parameters[0]} not found`
+          reply: `User ${ctx.parameters[0]} not found`,
         };
       }
     }
@@ -25,10 +25,9 @@ module.exports = {
     if (res.status === 200) {
       const { title, broadcaster_name } = res.data.data[0];
       return {
-        reply: `${broadcaster_name}'s title is: ${title}`
+        reply: `${broadcaster_name}'s title is: ${title}`,
       };
-    } else {
-      log("error", `Helix returned unexpected status code ${res.status}`);
     }
-  }
+    log("error", `Helix returned unexpected status code ${res.status}`);
+  },
 };

@@ -6,10 +6,10 @@ module.exports = {
   cooldown: 5000,
   help: "Gets a youtube link based off the given search query.",
   usage: "#youtube <search>",
-  run: async function(ctx) {
+  run: async function (ctx) {
     if (ctx.parameters < 1) {
       return {
-        reply: `Usage: ${this.usage}`
+        reply: `Usage: ${this.usage}`,
       };
     }
     const res = await decapi.axios({
@@ -18,8 +18,8 @@ module.exports = {
     });
     if (res.status === 200) {
       return {
-        reply: res.data
+        reply: res.data,
       };
     }
-  }
+  },
 };

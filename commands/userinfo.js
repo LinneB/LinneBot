@@ -6,10 +6,10 @@ module.exports = {
   cooldown: 3000,
   help: "Gets some information about a user.",
   usage: "#userinfo <user>",
-  run: async function(ctx) {
+  run: async function (ctx) {
     if (ctx.parameters.length < 1) {
       return {
-        reply: `Usage: ${this.usage}`
+        reply: `Usage: ${this.usage}`,
       };
     }
     const user = await ivr.getUser(ctx.parameters[0]);
@@ -17,10 +17,9 @@ module.exports = {
       return {
         reply: `Username: ${user.displayName} | User ID: ${user.id} | Description: ${user.bio} | Followers: ${user.followers}`,
       };
-    } else {
-      return {
-        reply: `User ${ctx.parameters[0]} not found`
-      };
     }
-  }
+    return {
+      reply: `User ${ctx.parameters[0]} not found`,
+    };
+  },
 };

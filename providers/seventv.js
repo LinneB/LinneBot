@@ -6,17 +6,17 @@ exports.axios = axios.create({
   validateStatus: false,
 });
 
-exports.getEmoteSet = async function(userid) {
+exports.getEmoteSet = async function (userid) {
   const res = await this.axios({
     method: "get",
-    url: "/users/twitch/" + userid
+    url: `/users/twitch/${userid}`,
   });
   if (res.status === 200) {
     return res.data.emote_set.emotes;
-  } else if (res.status === 404) {
-    return [];
-  } else {
-    log("error", `7TV returned unexpected status code ${res.status}`);
+  }
+  if (res.status === 404) {
     return [];
   }
+  log("error", `7TV returned unexpected status code ${res.status}`);
+  return [];
 };

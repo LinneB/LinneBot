@@ -6,8 +6,8 @@ const { onChat, onReady, streamOnline } = require("./misc/handler");
 require("./providers/mongodb");
 
 async function start() {
-  log ("info", "Validating user token");
-  if (!await helix.validateToken(process.env.USER_TOKEN)) {
+  log("info", "Validating user token");
+  if (!(await helix.validateToken(process.env.USER_TOKEN))) {
     log("fatal", "Invalid user token");
     process.exit(1);
   }
@@ -18,7 +18,10 @@ async function start() {
   tmiClient.on("ready", onReady);
   tmiClient.connect();
   const channels = getConfig("channels");
-  log("info", `Joining ${channels.length} ${channels.length > 1 ? "chats" : "chat"}`);
+  log(
+    "info",
+    `Joining ${channels.length} ${channels.length > 1 ? "chats" : "chat"}`,
+  );
   tmiClient.joinAll(getConfig("channels"));
 
   log("info", "Initializing EventSub...");

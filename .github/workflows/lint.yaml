@@ -1,4 +1,4 @@
-name: ESLint
+name: Biome
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  eslint:
-    name: Run ESLint
+  biome:
+    name: Run Biome
     runs-on: ubuntu-latest
 
     steps:
@@ -26,5 +26,5 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run ESLint
+      - name: Run Biome
         run: npm run lint

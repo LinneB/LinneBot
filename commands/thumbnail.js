@@ -8,17 +8,17 @@ module.exports = {
   cooldown: 3000,
   help: "Gets the thumbnail of a stream.",
   usage: "#thumbnail <channel>",
-  run: async function(ctx) {
+  run: async function (ctx) {
     if (ctx.parameters.length < 1) {
       return {
-        reply: `Usage: ${this.usage}`
+        reply: `Usage: ${this.usage}`,
       };
     }
     const channel = ctx.parameters[0];
     const userid = await ivr.usernameToID(channel);
     if (!userid) {
       return {
-        reply: `User ${channel} not found`
+        reply: `User ${channel} not found`,
       };
     }
     const res = await helix.axios({
@@ -29,7 +29,7 @@ module.exports = {
       const data = res.data.data;
       if (data.length < 1) {
         return {
-          reply: `${ctx.parameters[0]} is offline`
+          reply: `${ctx.parameters[0]} is offline`,
         };
       }
       const link = data[0].thumbnail_url.replace(
@@ -37,10 +37,9 @@ module.exports = {
         "1920x1080",
       );
       return {
-        reply: link
+        reply: link,
       };
-    } else {
-      log("error", `Helix returned unexpected status code ${res.status}`);
     }
+    log("error", `Helix returned unexpected status code ${res.status}`);
   },
 };

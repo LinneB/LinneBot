@@ -4,9 +4,7 @@ module.exports = {
   cooldown: 1000,
   help: "Sends the link to the LinneBot GitHub repository",
   usage: "#github",
-  run: function() {
-    return {
-      reply: "https://github.com/LinneB/LinneBot"
-    };
-  }
+  run: () => ({
+    reply: "https://github.com/LinneB/LinneBot",
+  }),
 };

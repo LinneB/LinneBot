@@ -5,7 +5,7 @@ exports.axios = axios.create({
   baseURL: "https://api.twitch.tv/helix",
   headers: {
     "Client-ID": process.env.CLIENT_ID,
-    "Authorization": `Bearer ${process.env.USER_TOKEN}`,
+    Authorization: `Bearer ${process.env.USER_TOKEN}`,
   },
   validateStatus: false,
 });
@@ -17,10 +17,9 @@ this.axios.interceptors.response.use(
       if (await this.validateToken(process.env.USER_TOKEN)) {
         utils.log("error", "Helix returned 401 but user token is valid");
         return response;
-      } else {
-        utils.log("fatal", "Invalid user token");
-        process.exit(1);
       }
+      log("fatal", "Invalid user token");
+      process.exit(1);
     } else {
       return response;
     }
@@ -28,24 +27,23 @@ this.axios.interceptors.response.use(
   (err) => err,
 );
 
-exports.channelsToID = async function(channels) {
+exports.channelsToID = async function (channels) {
   try {
     const res = await this.axios({
       method: "get",
-      url: "/users?login=" + channels.join("&login="),
+      url: `/users?login=${channels.join("&login=")}`,
     });
     if (!res || res?.data?.data?.length < 1) {
       return [];
-    } else {
-      return res.data.data.map((user) => user.id);
     }
+    return res.data.data.map((user) => user.id);
   } catch (err) {
     utils.log("error", err);
     return [];
   }
 };
 
-exports.validateToken = async function(token) {
+exports.validateToken = async (token) => {
   const res = await axios({
     baseURL: "https://id.twitch.tv/oauth2/validate",
     method: "get",
@@ -60,11 +58,11 @@ exports.validateToken = async function(token) {
     const expires_in = utils.formattedTimeAgoString(res.data.expires_in * 1000);
     utils.log("info", `User token is valid, expires on ${expire_date.toLocaleString("sv-SE")} (${expires_in})`);
     return true;
-  } else if (res.status === 401) {
-    return false;
-  } else {
-    utils.log("error", `Token validation responded with unexpected status code ${res.status}`);
   }
+  if (res.status === 401) {
+    return false;
+  }
+  utils.log("error", `Token validation responded with unexpected status code ${res.status}`);
 };
 
 setInterval(async () => {
