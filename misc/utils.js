@@ -66,7 +66,7 @@ exports.randomNumber = (min, max) => {
 };
 
 exports.randomElementInArray = (arr) => {
-  arr[Math.floor(Math.random() * arr.length)];
+  return arr[Math.floor(Math.random() * arr.length)];
 };
 
 exports.makeStreamOnlineMessages = (streamMessage, users) => {
