@@ -1,7 +1,6 @@
 {
+    "initialChannel": "linneb",
     "debug": false,
-    "channels": [
-        "linneb"
-    ],
+    "prefix": "#",
     "port": 8080
 }
