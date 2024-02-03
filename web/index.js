@@ -4,7 +4,7 @@ const path = require("path");
 const { getConfig } = require("../misc/config");
 const { log } = require("../misc/utils");
 const commands = require("../misc/commands");
-const ivr = require("../providers/ivr");
+const tmiClient = require("../providers/irc");
 const db = require("../providers/postgres");
 const port = getConfig("port") || 8080;
 
@@ -14,8 +14,9 @@ app.set("view engine", "ejs");
 app.use(morgan("short"));
 
 app.get("/", (req, res) => {
+  const channels = [...tmiClient.joinedChannels];
   res.render("pages/home", {
-    channels: getConfig("channels"),
+    channels: channels,
     commands: commands.commands,
   });
 });
