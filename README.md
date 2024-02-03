@@ -19,7 +19,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 You will need a few things to set it up:
 
 - A [Twitch app](https://dev.twitch.tv/console)
-- A [PostgreSQL](https://hub.docker.com/_/postgres) database
+- A [PostgreSQL](https://hub.docker.com/_/postgres) database (see `init.sql` for an example schema)
 - A user access token with scopes: `chat:read chat:edit moderator:manage:chat_messages`
 - An HTTPS endpoint (you can use [ngrok](https://ngrok.com/) to simplify this)
 
