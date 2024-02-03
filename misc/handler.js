@@ -1,7 +1,9 @@
 const tmiClient = require("../providers/irc");
 const helix = require("../providers/helix");
 const commands = require("../misc/commands");
-const mongodb = require("../providers/mongodb");
+const db = require("../providers/postgres");
+const tes = require("../providers/eventsub");
+const ivr = require("../providers/ivr");
 const { getConfig } = require("../misc/config");
 const { log, makeStreamOnlineMessages } = require("../misc/utils");
 
@@ -46,39 +48,116 @@ exports.onChat = async (msg) => {
     }
   }
   // Static command
-  const channelData = await mongodb.getChannelData(ctx.roomName);
-  for (const command of channelData.commands) {
-    if (command.name !== ctx.command.slice(1)) {
-      continue;
-    }
-    if (commands.isOnCooldown(ctx.senderUserID, command)) {
-      log("info", `Executing ${command.name}`);
+  // TODO: Global static commands, eg. #github
+  const result = await db.pool.query(db.queries.SELECT.getCommand, [
+    ctx.roomID,
+    ctx.command.slice(1),
+  ]);
+  if (result.rowCount >= 1) {
+    const staticCommand = result.rows[0];
+    if (commands.isOnCooldown(ctx.senderUserID, staticCommand)) {
+      log("info", `Executing ${staticCommand.name}`);
       tmiClient.sendMessage(
         ctx.roomName,
-        `@${ctx.senderDisplayName}, ${command.reply}`,
+        `@${ctx.senderDisplayName}, ${staticCommand.reply}`,
       );
     }
   }
 };
 
-exports.onReady = () => log("info", "Connected to twitch");
+exports.onReady = async () => {
+  // TODO: How does this work if a chat changes name
+  log("info", "Connected to chat");
+  const channels = await db.pool
+    .query(db.queries.SELECT.getChats)
+    .then((res) => {
+      if (res.rowCount < 1) {
+        return null;
+      }
+      return res.rows;
+    })
+    .catch((err) => {
+      log("error", "Could not get channels: ", err);
+    });
+
+  if (!channels) {
+    log("info", "No channels in database, falling back to config file");
+    const channelUsername = getConfig("initialChannel");
+    if (!channelUsername) {
+      log("fatal", "No inital channel provided in config file");
+      process.exit(1);
+    }
+    const channelID = await ivr.usernameToID(channelUsername);
+    if (!channelID) {
+      log(
+        "fatal",
+        `Could not get user ID for ${channelUsername}. Does this user exist?`,
+      );
+      process.exit(1);
+    }
+    db.pool
+      .query(db.queries.INSERT.addChat, [channelID, channelUsername])
+      .then(() => {
+        tmiClient.join(channelUsername);
+      })
+      .catch((err) => {
+        log("error", "Could not add chat: ", err);
+      });
+  } else {
+    log(
+      "info",
+      `Joining ${channels.length} ${channels.length > 1 ? "chats" : "chat"}`,
+    );
+    tmiClient.joinAll(channels.map((channel) => channel.user_name));
+  }
+};
 
 exports.streamOnline = async (event) => {
-  const channels = getConfig("channels");
   const streamUsername = event.broadcaster_user_login.toLowerCase();
   const streamUserID = event.broadcaster_user_id;
 
-  const subscribedChats = {};
-  const channelsData = await mongodb.ChannelModel.find({
-    channel: { $in: channels },
-  });
-  for (const channelData of channelsData) {
-    for (const sub of channelData.subscriptions) {
-      if (sub.channel === streamUsername) {
-        subscribedChats[channelData.channel] = sub.subscribers;
+  const subscribedChats = await db.pool
+    .query(db.queries.SELECT.getSubscribedChatsByUserID, [streamUserID])
+    .then((res) => {
+      if (res.rowCount < 1) {
+        return {};
       }
-    }
+      const subscribedChats = {};
+      for (const row of res.rows) {
+        subscribedChats[row.user_name] = [];
+      }
+      return subscribedChats;
+    });
+
+  if (Object.keys(subscribedChats).length < 1) {
+    // Notification received for channel not in database
+    log(
+      "info",
+      `Got notification for unused channel ${streamUsername}, removing...`,
+    );
+    tes
+      .unsubscribe("stream.online", {
+        broadcaster_user_id: streamUserID,
+      })
+      .then(() => {
+        log("debug", `Removed subscription for ${streamUsername}`);
+      })
+      .catch(() => {
+        log("error", `Could not unsubscribe from ${streamUsername}`);
+      });
+    return;
   }
+
+  await db.pool
+    .query(db.queries.SELECT.getSubscribersByUserID, [streamUserID])
+    .then((res) => {
+      if (res.rowCount < 1) {
+        return;
+      }
+      for (const row of res.rows) {
+        subscribedChats[row.chat_username].push(row.subscriber_username);
+      }
+    });
 
   const res = await helix.axios({
     method: "get",

@@ -4,8 +4,8 @@ const path = require("path");
 const { getConfig } = require("../misc/config");
 const { log } = require("../misc/utils");
 const commands = require("../misc/commands");
-const mongodb = require("../providers/mongodb");
 const ivr = require("../providers/ivr");
+const db = require("../providers/postgres");
 const port = getConfig("port") || 8080;
 
 const app = express();
@@ -39,22 +39,35 @@ app.get("/command/:command", (req, res) => {
 
 app.get("/commands/:channel", async (req, res) => {
   const channel = req.params.channel || "";
-  if (!getConfig("channels").includes(channel.toLowerCase())) {
+
+  try {
+    const chats = await db.pool
+      .query(db.queries.SELECT.getChats)
+      .then((res) => {
+        if (res.rowCount < 1) {
+          return [];
+        }
+        return res.rows.map((row) => row.user_name);
+      });
+
+    if (!chats.includes(channel)) {
+      res.status(404).render("pages/channelNotFound");
+      return;
+    }
+
+    const staticCommands = await db.pool
+      .query(db.queries.SELECT.getCommands, [channel])
+      .then((res) => res.rows);
+
+    res.render("pages/channelCommands", {
+      commands: commands.commands,
+      staticCommands,
+      username: channel,
+    });
+  } catch (err) {
+    log("error", "Could not get commands: ", err);
     res.status(404).render("pages/channelNotFound");
-    return;
   }
-  const channelData = await mongodb.ChannelModel.findOne({ channel: channel });
-  if (!channelData) {
-    res.status(404).render("pages/channelNotFound");
-    return;
-  }
-  const channelInfo = await ivr.getUser(channel);
-  res.render("pages/channelCommands", {
-    commands: commands.commands,
-    staticCommands: channelData.commands,
-    username: channel,
-    profilePicURL: channelInfo.logo,
-  });
 });
 
 app.use("/static", express.static(path.join(__dirname, "public")));

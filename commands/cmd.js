@@ -1,4 +1,4 @@
-const mongodb = require("../providers/mongodb");
+const db = require("../providers/postgres");
 const commands = require("../misc/commands");
 const { log } = require("../misc/utils");
 const { getConfig } = require("../misc/config");
@@ -36,52 +36,64 @@ module.exports = {
           reply: "Command replies can only be 400 characters WTRuck",
         };
       }
-      const data = await mongodb.getChannelData(ctx.roomName);
-      for (const command of data.commands) {
-        if (command.name === ctx.parameters[1]) {
-          return {
-            reply: `${command.name} is already a command`,
-          };
-        }
+
+      const res = await db.pool.query(db.queries.SELECT.getCommand, [
+        ctx.roomID,
+        commandName,
+      ]);
+      if (res.rowCount > 0) {
+        return {
+          reply: `${commandName} is already a command`,
+        };
       }
+
       const prefix = getConfig("prefix");
       if (commands.getCommandByAlias(prefix + commandName)) {
         return {
           reply: `${commandName} is already a command`,
         };
       }
+
       log(
         "info",
         `Adding command ${commandName} (issued by ${ctx.senderUsername})`,
       );
-      data.commands.push({
-        name: commandName,
-        reply: commandReply,
-      });
-      data.save();
+      await db.pool
+        .query(db.queries.INSERT.addCommand, [
+          ctx.roomID,
+          commandName,
+          commandReply,
+        ])
+        .catch((err) => {
+          log("error", "Could not add command: ", err);
+        });
       return {
         reply: `Added command ${commandName}`,
       };
     }
     if (ctx.parameters[0] === "remove") {
       const commandName = ctx.parameters[1].toLowerCase();
-      const data = await mongodb.getChannelData(ctx.roomName);
-      for (const command of data.commands) {
-        if (command.name !== commandName) {
-          continue;
-        }
-        log(
-          "info",
-          `Removing command ${commandName} (issued by ${ctx.senderUsername})`,
-        );
-        data.commands = data.commands.filter((cmd) => cmd.name !== commandName);
-        data.save();
+      const res = await db.pool.query(db.queries.SELECT.getCommand, [
+        ctx.roomID,
+        commandName,
+      ]);
+      if (res.rowCount < 1) {
         return {
-          reply: `Removed command ${commandName}`,
+          reply: `${commandName} is not a command`,
         };
       }
+
+      log(
+        "info",
+        `Removing command ${commandName} (issued by ${ctx.senderUsername})`,
+      );
+      db.pool
+        .query(db.queries.DELETE.deleteCommand, [ctx.roomID, commandName])
+        .catch((err) => {
+          log("error", "Could not delete command: ", err);
+        });
       return {
-        reply: `Command ${commandName} not found`,
+        reply: `Removed command ${commandName}`,
       };
     }
   },

@@ -1,4 +1,5 @@
-const mongodb = require("../providers/mongodb");
+const db = require("../providers/postgres");
+const ivr = require("../providers/ivr");
 
 module.exports = {
   name: "notify",
@@ -12,32 +13,70 @@ module.exports = {
         reply: `Usage: ${this.usage}`,
       };
     }
-    const channel = ctx.parameters[0].toLowerCase();
-    const channelData = await mongodb.getChannelData(ctx.roomName);
 
-    for (const sub of channelData.subscriptions) {
-      if (sub.channel !== channel) {
-        continue;
-      }
-      if (sub.subscribers.includes(ctx.senderUsername)) {
-        // unsubscribe user
-        sub.subscribers = sub.subscribers.filter(
-          (u) => u !== ctx.senderUsername,
-        );
-        channelData.save();
-        return {
-          reply: `Unsubscribed from ${channel}. You will no longer be notified when they go live`,
-        };
-      }
-      // subscribe user
-      sub.subscribers.push(ctx.senderUsername);
-      channelData.save();
+    const subscriptionUsername = ctx.parameters[0].toLowerCase();
+
+    const subscription = await db.pool
+      .query(db.queries.SELECT.getSubscription, [
+        ctx.roomID,
+        subscriptionUsername,
+      ])
+      .then((res) => {
+        if (res.rowCount < 1) {
+          return null;
+        }
+        return res.rows[0];
+      });
+
+    if (!subscription) {
       return {
-        reply: `Subscribed to ${channel}. You will be notified when they go live`,
+        reply: `This chat is not subscribed to ${subscriptionUsername}, you can subscribe to it using #livenotif add ${subscriptionUsername}`,
       };
     }
+
+    const subscriptionID = subscription.subscription_id;
+
+    const subscriber = await db.pool
+      .query(db.queries.SELECT.getSubscriber, [
+        ctx.roomID,
+        subscriptionUsername,
+        ctx.senderUsername,
+      ])
+      .then((res) => {
+        if (res.rowCount < 1) {
+          return null;
+        }
+        return res.rows[0];
+      });
+
+    if (subscriber) {
+      // Unsubscribe user
+      await db.pool
+        .query(db.queries.DELETE.deleteSubscriber, [
+          ctx.roomID,
+          ctx.senderUsername,
+          subscriptionID,
+        ])
+        .catch((err) => {
+          log("error", "Could not unsubscribe user: ", err);
+        });
+      return {
+        reply: `Unsubscribed from ${subscriptionUsername}. You will no longer be notified when they go live`,
+      };
+    }
+
+    // Subscribe user
+    await db.pool
+      .query(db.queries.INSERT.addSubscriber, [
+        ctx.roomID,
+        ctx.senderUsername,
+        subscriptionID,
+      ])
+      .catch((err) => {
+        log("error", "Could not subscribe user: ", err);
+      });
     return {
-      reply: `This chat is not subscribed to ${channel}, you can subscribe to it using #livenotif add ${channel}`,
+      reply: `Subscribed to ${subscriptionUsername}. You will be notified when they go live`,
     };
   },
 };

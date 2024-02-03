@@ -1,4 +1,3 @@
-const { getConfig } = require("../misc/config");
 const tmiClient = require("../providers/irc");
 
 module.exports = {
@@ -23,7 +22,7 @@ module.exports = {
     formattedUptime += `${seconds}s`;
 
     // Channels
-    const channels = getConfig("channels").length;
+    const channels = [...tmiClient.joinedChannels].length;
 
     // Chat latency
     const currentTime = Date.now();
