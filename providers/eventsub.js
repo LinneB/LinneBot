@@ -1,6 +1,5 @@
 const TES = require("tesjs");
-const { log } = require("../misc/utils");
-const ivr = require("./ivr");
+const logger = require("../misc/logger").getLogger("eventsub");
 const db = require("../providers/postgres");
 const { getConfig } = require("../misc/config");
 const { expressApp } = require("../web");
@@ -33,13 +32,13 @@ tes.subscribeIfNot = async function (userIDs = []) {
       tes
         .subscribe("stream.online", { broadcaster_user_id: userid })
         .then(() => {
-          log("debug", `Subscription created for ${userid}`);
+          logger.debug(`Subscription created for ${userid}`);
         })
         .catch((err) => {
-          log("error", `Could not subscribe to ${userid}`, err);
+          logger.error(`Could not subscribe to ${userid}`, err);
         });
     } else {
-      log("debug", `Subscription for ${userid} already exists, skipping`);
+      logger.debug(`Subscription for ${userid} already exists, skipping`);
     }
   }
 };
@@ -55,7 +54,7 @@ tes.unsubscribeUnused = async function () {
       return res.rows.map((sub) => sub.subscription_user_id.toString());
     })
     .catch((err) => {
-      log("error", "Could not get subscribed channels from database", err);
+      logger.error("Could not get subscribed channels from database", err);
     });
 
   const subscriptions = await this.getSubscriptionsByStatus("enabled");
@@ -63,7 +62,7 @@ tes.unsubscribeUnused = async function () {
     const channelID = sub.condition.broadcaster_user_id;
     if (!subscribedIDs.includes(channelID)) {
       this.unsubscribe(sub.id).then(() => {
-        log("info", `Unsubscribed from unused channel ${channelID}`);
+        logger.debug(`Unsubscribed from unused channel ${channelID}`);
       });
     }
   }
@@ -71,7 +70,7 @@ tes.unsubscribeUnused = async function () {
 
 // Gets all subscribed channels from database
 async function subscribeToChannels() {
-  log("info", "Initializing EventSub...");
+  logger.info("Initializing EventSub...");
   const subscribedIDs = await db.pool
     .query(db.queries.SELECT.getSubscriptions)
     .then((res) => {
@@ -81,13 +80,12 @@ async function subscribeToChannels() {
       return res.rows.map((sub) => sub.subscription_user_id.toString());
     })
     .catch((err) => {
-      log("error", "Could not get subscribed channels from database", err);
+      logger.error("Could not get subscribed channels from database", err);
     });
   if (subscribedIDs.length < 1) {
     return;
   }
-  log(
-    "info",
+  logger.info(
     `Subscribing to ${subscribedIDs.length} ${
       subscribedIDs.length === 1 ? "channel" : "channels"
     }`,

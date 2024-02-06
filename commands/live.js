@@ -1,5 +1,5 @@
 const helix = require("../providers/helix");
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("cmd/live");
 
 module.exports = {
   name: "live",
@@ -42,6 +42,6 @@ module.exports = {
         reply: `User ${username} not found`,
       };
     }
-    log("error", `Helix returned unexpected status code ${res.status}`);
+    logger.error(`Helix returned unexpected status code ${res.status}`);
   },
 };

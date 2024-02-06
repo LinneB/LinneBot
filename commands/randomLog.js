@@ -1,5 +1,5 @@
 const justlog = require("../providers/justlog");
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("cmd/randomLog");
 
 module.exports = {
   name: "randomLog",
@@ -33,6 +33,6 @@ module.exports = {
           "Username/channel not found, make sure channel is being logged on https://logs.ivr.fi",
       };
     }
-    log("error", `Justlog returned unexpected status code ${res.status}`);
+    logger.error(`Justlog returned unexpected status code ${res.status}`);
   },
 };
