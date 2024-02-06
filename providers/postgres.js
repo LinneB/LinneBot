@@ -1,8 +1,8 @@
 const { Pool } = require("pg");
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("postgres");
 
 if (!process.env.DATABASE_URL) {
-  log("fatal", "Missing DATABASE_URL in .env");
+  logger.fatal("Missing DATABASE_URL in .env");
   process.exit(1);
 }
 

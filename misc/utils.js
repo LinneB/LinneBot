@@ -1,5 +1,3 @@
-const chalk = require("chalk");
-
 exports.timeDifference = (ms) => {
   const date = new Date(ms);
   return {
@@ -34,21 +32,6 @@ exports.formattedTimeAgoString = function (dur) {
     return `${seconds} ${seconds > 1 ? "seconds" : "second"}`;
   }
   return null;
-};
-
-exports.log = (level, ...message) => {
-  const date = new Date().toLocaleString("sv-SE");
-  if (level === "debug") {
-    console.log(`[${date}] ${chalk.gray("DEBUG")}: ${message.join(" ")}`);
-  } else if (level === "info") {
-    console.log(`[${date}] ${chalk.green("INFO")}: ${message.join(" ")}`);
-  } else if (level === "warn") {
-    console.log(`[${date}] ${chalk.yellow("WARN")}: ${message.join(" ")}`);
-  } else if (level === "error") {
-    console.log(`[${date}] ${chalk.red("ERROR")}: ${message.join(" ")}`);
-  } else if (level === "fatal") {
-    console.log(`[${date}] ${chalk.bgRed("FATAL")}: ${message.join(" ")}`);
-  }
 };
 
 exports.truncateString = (input, length) => {

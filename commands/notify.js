@@ -1,5 +1,5 @@
 const db = require("../providers/postgres");
-const ivr = require("../providers/ivr");
+const logger = require("../misc/logger").getLogger("cmd/notify");
 
 module.exports = {
   name: "notify",
@@ -58,7 +58,7 @@ module.exports = {
           subscriptionID,
         ])
         .catch((err) => {
-          log("error", "Could not unsubscribe user: ", err);
+          logger.error("Could not unsubscribe user: ", err);
         });
       return {
         reply: `Unsubscribed from ${subscriptionUsername}. You will no longer be notified when they go live`,
@@ -73,7 +73,7 @@ module.exports = {
         subscriptionID,
       ])
       .catch((err) => {
-        log("error", "Could not subscribe user: ", err);
+        logger.error("Could not subscribe user: ", err);
       });
     return {
       reply: `Subscribed to ${subscriptionUsername}. You will be notified when they go live`,

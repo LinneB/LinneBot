@@ -1,4 +1,4 @@
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("cmd/livenotif");
 const ivr = require("../providers/ivr");
 const db = require("../providers/postgres");
 const tes = require("../providers/eventsub");
@@ -45,8 +45,7 @@ module.exports = {
         };
       }
 
-      log(
-        "info",
+      logger.info(
         `Subscribing to ${subscriptionUsername} in ${ctx.roomName} (issued by ${ctx.senderDisplayName})`,
       );
       await db.pool
@@ -56,7 +55,7 @@ module.exports = {
           subscriptionUserID,
         ])
         .catch((err) => {
-          log("error", "Could not add subscription to database: ", err);
+          logger.error("Could not add subscription to database: ", err);
         });
       tes.subscribeIfNot([subscriptionUserID]);
       return {
@@ -82,8 +81,7 @@ module.exports = {
         };
       }
 
-      log(
-        "info",
+      logger.info(
         `Unsubscribing from ${subscriptionUsername} in ${ctx.roomName} (issued by ${ctx.senderDisplayName})`,
       );
       await db.pool.query(db.queries.DELETE.deleteSubscription, [

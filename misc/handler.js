@@ -5,7 +5,8 @@ const db = require("../providers/postgres");
 const tes = require("../providers/eventsub");
 const ivr = require("../providers/ivr");
 const { getConfig } = require("../misc/config");
-const { log, makeStreamOnlineMessages } = require("../misc/utils");
+const { makeStreamOnlineMessages } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("handler");
 
 function buildMessageContext(msg) {
   const args = msg.messageText.split(" ").filter((c) => c.trim());
@@ -37,7 +38,7 @@ exports.onChat = async (msg) => {
   const command = commands.getCommandByAlias(ctx.command);
   if (command) {
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
-      log("info", `Executing ${command.name}`);
+      logger.info(`Executing ${command.name}`);
       const result = await command.run(ctx);
       if (result?.reply) {
         tmiClient.sendMessage(
@@ -56,7 +57,7 @@ exports.onChat = async (msg) => {
   if (result.rowCount >= 1) {
     const staticCommand = result.rows[0];
     if (commands.isOnCooldown(ctx.senderUserID, staticCommand)) {
-      log("info", `Executing ${staticCommand.name}`);
+      logger.info(`Executing ${staticCommand.name}`);
       tmiClient.sendMessage(
         ctx.roomName,
         `@${ctx.senderDisplayName}, ${staticCommand.reply}`,
@@ -67,7 +68,7 @@ exports.onChat = async (msg) => {
 
 exports.onReady = async () => {
   // TODO: How does this work if a chat changes name
-  log("info", "Connected to chat");
+  logger.info("Connected to chat");
   const channels = await db.pool
     .query(db.queries.SELECT.getChats)
     .then((res) => {
@@ -77,20 +78,19 @@ exports.onReady = async () => {
       return res.rows;
     })
     .catch((err) => {
-      log("error", "Could not get channels: ", err);
+      logger.error("Could not get channels: ", err);
     });
 
   if (!channels) {
-    log("info", "No channels in database, falling back to config file");
+    logger.warn("No channels in database, falling back to config file");
     const channelUsername = getConfig("initialChannel");
     if (!channelUsername) {
-      log("fatal", "No inital channel provided in config file");
+      logger.fatal("No inital channel provided in config file");
       process.exit(1);
     }
     const channelID = await ivr.usernameToID(channelUsername);
     if (!channelID) {
-      log(
-        "fatal",
+      logger.fatal(
         `Could not get user ID for ${channelUsername}. Does this user exist?`,
       );
       process.exit(1);
@@ -101,11 +101,10 @@ exports.onReady = async () => {
         tmiClient.join(channelUsername);
       })
       .catch((err) => {
-        log("error", "Could not add chat: ", err);
+        logger.error("Could not add chat: ", err);
       });
   } else {
-    log(
-      "info",
+    logger.info(
       `Joining ${channels.length} ${channels.length > 1 ? "chats" : "chat"}`,
     );
     tmiClient.joinAll(channels.map((channel) => channel.user_name));
@@ -131,8 +130,7 @@ exports.streamOnline = async (event) => {
 
   if (Object.keys(subscribedChats).length < 1) {
     // Notification received for channel not in database
-    log(
-      "info",
+    logger.info(
       `Got notification for unused channel ${streamUsername}, removing...`,
     );
     tes
@@ -140,10 +138,10 @@ exports.streamOnline = async (event) => {
         broadcaster_user_id: streamUserID,
       })
       .then(() => {
-        log("debug", `Removed subscription for ${streamUsername}`);
+        logger.debug(`Removed subscription for ${streamUsername}`);
       })
       .catch(() => {
-        log("error", `Could not unsubscribe from ${streamUsername}`);
+        logger.debug(`Could not unsubscribe from ${streamUsername}`);
       });
     return;
   }
@@ -173,7 +171,7 @@ exports.streamOnline = async (event) => {
       }
     }
   } else {
-    log("error", `Helix returned unexpected status code ${res.status}`);
+    logger.error(`Helix returned unexpected status code ${res.status}`);
     const streamMessage = `https://twitch.tv/${streamUsername} just went live!`;
     for (const [chat, subs] of Object.entries(subscribedChats)) {
       const messages = makeStreamOnlineMessages(streamMessage, subs);

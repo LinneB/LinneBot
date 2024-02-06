@@ -1,6 +1,6 @@
 const db = require("../providers/postgres");
 const commands = require("../misc/commands");
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("cmd/cmd");
 const { getConfig } = require("../misc/config");
 
 module.exports = {
@@ -54,8 +54,7 @@ module.exports = {
         };
       }
 
-      log(
-        "info",
+      logger.info(
         `Adding command ${commandName} (issued by ${ctx.senderUsername})`,
       );
       await db.pool
@@ -65,7 +64,7 @@ module.exports = {
           commandReply,
         ])
         .catch((err) => {
-          log("error", "Could not add command: ", err);
+          logger.error("Could not add command: ", err);
         });
       return {
         reply: `Added command ${commandName}`,
@@ -83,14 +82,13 @@ module.exports = {
         };
       }
 
-      log(
-        "info",
+      logger.info(
         `Removing command ${commandName} (issued by ${ctx.senderUsername})`,
       );
       db.pool
         .query(db.queries.DELETE.deleteCommand, [ctx.roomID, commandName])
         .catch((err) => {
-          log("error", "Could not delete command: ", err);
+          logger.error("Could not delete command: ", err);
         });
       return {
         reply: `Removed command ${commandName}`,

@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
 const { getConfig } = require("../misc/config");
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("web/index.js");
 const commands = require("../misc/commands");
 const tmiClient = require("../providers/irc");
 const db = require("../providers/postgres");
@@ -66,7 +66,7 @@ app.get("/commands/:channel", async (req, res) => {
       username: channel,
     });
   } catch (err) {
-    log("error", "Could not get commands: ", err);
+    logger.error("Could not get commands: ", err);
     res.status(404).render("pages/channelNotFound");
   }
 });
@@ -74,7 +74,7 @@ app.get("/commands/:channel", async (req, res) => {
 app.use("/static", express.static(path.join(__dirname, "public")));
 
 app.listen(port, () => {
-  log("info", `Express server started at http://localhost:${port}`);
+  logger.info(`Express server started at http://localhost:${port}`);
 });
 
 module.exports = {

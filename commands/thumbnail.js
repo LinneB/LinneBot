@@ -1,6 +1,6 @@
 const helix = require("../providers/helix");
 const ivr = require("../providers/ivr");
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("cmd/thumbnail");
 
 module.exports = {
   name: "thumbnail",
@@ -40,6 +40,6 @@ module.exports = {
         reply: link,
       };
     }
-    log("error", `Helix returned unexpected status code ${res.status}`);
+    logger.error(`Helix returned unexpected status code ${res.status}`);
   },
 };

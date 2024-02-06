@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { log } = require("../misc/utils");
+const logger = require("../misc/logger").getLogger("ivr");
 
 exports.axios = axios.create({
   baseURL: "https://api.ivr.fi/v2",
@@ -17,7 +17,7 @@ exports.getUser = async function (username) {
     }
     return null;
   }
-  log("error", `IVR returned unexpected status code ${res.status}`);
+  logger.error(`IVR returned unexpected status code ${res.status}`);
 };
 
 exports.getUserID = async function (userid) {
@@ -31,7 +31,7 @@ exports.getUserID = async function (userid) {
     }
     return null;
   }
-  log("error", `IVR returned unexpected status code ${res.status}`);
+  logger.error(`IVR returned unexpected status code ${res.status}`);
 };
 
 exports.usernameToID = async function (username) {
