@@ -1,9 +1,9 @@
 require("dotenv").config();
 const { log } = require("./misc/utils");
-const { getConfig } = require("./misc/config");
 const helix = require("./providers/helix");
 const { onChat, onReady, streamOnline } = require("./misc/handler");
-require("./providers/mongodb");
+const tmiClient = require("./providers/irc");
+const tes = require("./providers/eventsub");
 
 async function start() {
   log("info", "Validating user token");
@@ -13,19 +13,10 @@ async function start() {
   }
 
   log("info", "Connecting to chat...");
-  const tmiClient = require("./providers/irc");
   tmiClient.on("PRIVMSG", onChat);
   tmiClient.on("ready", onReady);
   tmiClient.connect();
-  const channels = getConfig("channels");
-  log(
-    "info",
-    `Joining ${channels.length} ${channels.length > 1 ? "chats" : "chat"}`,
-  );
-  tmiClient.joinAll(getConfig("channels"));
 
-  log("info", "Initializing EventSub...");
-  const tes = require("./providers/eventsub");
   tes.on("stream.online", streamOnline);
 }
 

@@ -19,7 +19,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 You will need a few things to set it up:
 
 - A [Twitch app](https://dev.twitch.tv/console)
-- A [MongoDB](https://hub.docker.com/_/mongo) database
+- A [PostgreSQL](https://hub.docker.com/_/postgres) database (see `init.sql` for an example schema)
 - A user access token with scopes: `chat:read chat:edit moderator:manage:chat_messages`
 - An HTTPS endpoint (you can use [ngrok](https://ngrok.com/) to simplify this)
 
@@ -41,20 +41,16 @@ BOT_USERNAME="linnebot"
 BASE_URL="https://example.com"
 WEBHOOK_SECRET="thisisarandomstring"
 
-# Database URL
-MONGODB_URL="mongodb://user:pass@localhost:27017/linnebot"
+# PostgreSQL connection string
+DATABASE_URL="postgresql://username:password@hostname:1234/linnebot"
 ```
 
 Fill `config.json` with the rest of your options:
 ```json
 {
-    // increased log output
+    "initialChannel": "linneb",
     "debug": false,
-    // channels to join
-    "channels": [
-        "linneb"
-    ],
-    // port to host website and EventSub on
+    "prefix": "#",
     "port": 8080
 }
 ```

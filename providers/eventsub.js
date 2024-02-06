@@ -1,7 +1,7 @@
 const TES = require("tesjs");
 const { log } = require("../misc/utils");
 const ivr = require("./ivr");
-const mongodb = require("./mongodb");
+const db = require("../providers/postgres");
 const { getConfig } = require("../misc/config");
 const { expressApp } = require("../web");
 
@@ -46,26 +46,18 @@ tes.subscribeIfNot = async function (userIDs = []) {
 
 // Removes subscriptions that are not used by any chat
 tes.unsubscribeUnused = async function () {
-  const channels = getConfig("channels");
-  const channelsData = await mongodb.ChannelModel.find({
-    channel: { $in: channels },
-  });
-  const subscribedChannels = new Set();
-  for (const channelData of channelsData) {
-    for (const sub of channelData.subscriptions) {
-      subscribedChannels.add(sub.channel);
-    }
-  }
+  const subscribedIDs = await db.pool
+    .query(db.queries.SELECT.getSubscriptions)
+    .then((res) => {
+      if (res.rowCount < 1) {
+        return [];
+      }
+      return res.rows.map((sub) => sub.subscription_user_id.toString());
+    })
+    .catch((err) => {
+      log("error", "Could not get subscribed channels from database", err);
+    });
 
-  const res = await ivr.axios({
-    method: "get",
-    url: `/twitch/user?login=${[...subscribedChannels].join("%2C")}`,
-  });
-  if (res.status !== 200) {
-    log("error", `IVR returned unexpected status code ${res.status}`);
-    return;
-  }
-  const subscribedIDs = res.data.map((user) => user.id);
   const subscriptions = await this.getSubscriptionsByStatus("enabled");
   for (const sub of subscriptions.data) {
     const channelID = sub.condition.broadcaster_user_id;
@@ -79,36 +71,30 @@ tes.unsubscribeUnused = async function () {
 
 // Gets all subscribed channels from database
 async function subscribeToChannels() {
-  const channels = getConfig("channels");
-  const channelsData = await Promise.all(
-    channels.map((channel) => {
-      return mongodb.getChannelData(channel);
-    }),
-  );
-  const subscribedChannels = [];
-  for (const channelData of channelsData) {
-    for (const sub of channelData.subscriptions) {
-      if (!subscribedChannels.includes(sub.channel)) {
-        subscribedChannels.push(sub.channel);
+  log("info", "Initializing EventSub...");
+  const subscribedIDs = await db.pool
+    .query(db.queries.SELECT.getSubscriptions)
+    .then((res) => {
+      if (res.rowCount < 1) {
+        return [];
       }
-    }
-  }
-  if (subscribedChannels.length < 1) {
+      return res.rows.map((sub) => sub.subscription_user_id.toString());
+    })
+    .catch((err) => {
+      log("error", "Could not get subscribed channels from database", err);
+    });
+  if (subscribedIDs.length < 1) {
     return;
   }
-  const res = await ivr.axios({
-    method: "get",
-    url: `/twitch/user?login=${subscribedChannels.join("%2C")}`,
-  });
-  const channelIDs = res.data.map((user) => user.id);
   log(
     "info",
-    `Subscribing to ${channelIDs.length} ${
-      channelIDs.length > 1 ? "channels" : "channel"
+    `Subscribing to ${subscribedIDs.length} ${
+      subscribedIDs.length === 1 ? "channel" : "channels"
     }`,
   );
-  tes.subscribeIfNot(channelIDs);
+  tes.subscribeIfNot(subscribedIDs);
 }
+
 subscribeToChannels();
 
 module.exports = tes;
