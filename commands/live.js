@@ -20,7 +20,7 @@ module.exports = {
     });
     if (res.status === 200) {
       if (res.data.data.length > 0) {
-        const { user_name, game_name, viewer_count, started_at, title } =
+        const { user_login, game_name, viewer_count, started_at, title } =
           res.data.data[0];
         const currentTime = new Date();
         const startedTime = new Date(started_at);
@@ -30,7 +30,7 @@ module.exports = {
           (timeDifference % (1000 * 60 * 60)) / (1000 * 60),
         );
         return {
-          reply: `https://twitch.tv/${user_name} has been live for ${hours}h, ${minutes}m with ${viewer_count} viewers playing "${game_name}". ${title}`,
+          reply: `https://twitch.tv/${user_login} has been live for ${hours}h, ${minutes}m with ${viewer_count} viewers playing "${game_name}". ${title}`,
         };
       }
       return {
