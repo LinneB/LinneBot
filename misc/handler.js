@@ -163,7 +163,7 @@ exports.streamOnline = async (event) => {
   });
   if (res.status === 200) {
     const { game_name, title } = res.data.data[0];
-    const streamMessage = `https://twitch.tv/${streamUsername} just went live playing ${game_name}! ${title}`;
+    const streamMessage = `https://twitch.tv/${streamUsername} just went live playing ${game_name}! "${title}"`;
     for (const [chat, subs] of Object.entries(subscribedChats)) {
       const messages = makeStreamOnlineMessages(streamMessage, subs);
       for (const message of messages) {

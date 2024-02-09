@@ -56,12 +56,12 @@ exports.makeStreamOnlineMessages = (streamMessage, users) => {
   const messages = [];
   let buf = streamMessage;
   for (const user of users) {
-    const combinedMessage = `${buf} ${user}`;
+    const combinedMessage = `${buf} @${user}`;
     if (combinedMessage.length > 450) {
       messages.push(buf.trim());
-      buf = user;
+      buf = `@${user}`;
     } else {
-      buf = `${buf} ${user}`;
+      buf = combinedMessage;
     }
   }
   messages.push(buf.trim());
