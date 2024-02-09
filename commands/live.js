@@ -1,4 +1,6 @@
 const helix = require("../providers/helix");
+const ivr = require("../providers/ivr");
+const utils = require("../misc/utils");
 const logger = require("../misc/logger").getLogger("cmd/live");
 
 module.exports = {
@@ -31,6 +33,15 @@ module.exports = {
         );
         return {
           reply: `https://twitch.tv/${user_login} has been live for ${hours}h, ${minutes}m with ${viewer_count} viewers playing "${game_name}". ${title}`,
+        };
+      }
+      const user = await ivr.getUser(username);
+      if (user?.lastBroadcast?.startedAt) {
+        const timeAgo = utils.formattedTimeAgoString(
+          Date.now() - new Date(user.lastBroadcast.startedAt),
+        );
+        return {
+          reply: `${username} is offline. They last streamed ${timeAgo} ago`,
         };
       }
       return {
