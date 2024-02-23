@@ -20,7 +20,9 @@ module.exports = {
       return {
         reply: `${command.help} Aliases: [${command.aliases.join(
           ", ",
-        )}]. Usage: ${command.usage}`,
+        )}]. Usage: ${
+          command.usage
+        }. More information: https://bot.linneb.xyz/command/${command.name}`,
       };
     }
   },
