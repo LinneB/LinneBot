@@ -81,5 +81,8 @@ exports.queries = {
     // Removes subscriber by chatID and subscriber username and subscription ID
     deleteSubscriber:
       "DELETE FROM subscribers WHERE chat_id = $1 AND subscriber_username = $2 AND subscription_id = $3",
+
+    // Removes a chat by userid
+    deleteChat: "DELETE FROM chats WHERE user_id = $1",
   },
 };
