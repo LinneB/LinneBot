@@ -39,7 +39,7 @@ exports.validateToken = async (token) => {
     validateStatus: false,
   });
   if (res.status === 200) {
-    const expire_date = new Date(Date.now() + (res.data.expires_in * 1000));
+    const expire_date = new Date(Date.now() + res.data.expires_in * 1000);
     const expires_in = utils.formattedTimeAgoString(res.data.expires_in * 1000);
     logger.info(
       `User token is valid, expires on ${expire_date.toLocaleString(
