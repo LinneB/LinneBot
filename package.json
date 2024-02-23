@@ -9,7 +9,8 @@
     "start": "node .",
     "build": "docker-compose build",
     "dev": "nodemon -e js,ejs .",
-    "format": "biome format . --write"
+    "format": "biome format . --write",
+    "check": "biome check ."
   },
   "keywords": [],
   "author": "LinneB",
