@@ -31,4 +31,11 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: ["Clears chat 500 times"],
+      command: "#clear",
+      response: "Chat has been cleared by a moderator.",
+    },
+  ],
 };

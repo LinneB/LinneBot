@@ -16,7 +16,18 @@
             <li><%= alias %></li>
         <% } %>
         </ul>
-        <a class="hyperlink" href="javascript:window.history.back();">Back to commands</a>
+        <h2>Examples:</h2>
+        <div class="command-examples">
+            <% for (example of command.examples) { %>
+            <div class="command-example">
+                <% for (description of example.description) { %>
+                    <p class="command-description"><%- description %></p>
+                <% } %>
+                <p class="command-command"><%= example.command %></p>
+                <p class="command-response"><%= example.response %></p>
+            </div>
+            <% } %>
+        </div>
     </div>
 </body>
 </html>

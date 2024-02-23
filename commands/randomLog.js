@@ -35,4 +35,14 @@ module.exports = {
     }
     logger.error(`Justlog returned unexpected status code ${res.status}`);
   },
+  examples: [
+    {
+      description: [
+        'Get a random log for a user in a channel from <a class="hyperlink" href="https://logs.ivr.fi">logs.ivr.fi</a>',
+      ],
+      command: "#rl linneb forsen",
+      response:
+        "@LinneB, [2023-09-09 20:28:00] LinneB: elisDancing LETS elisDancing GO elisDancing FORSEN elisDancing",
+    },
+  ],
 };

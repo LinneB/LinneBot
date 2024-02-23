@@ -95,4 +95,21 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: ['Adds a command named "test"'],
+      command: "#cmd add test This is a brand new command!",
+      response: "@LinneB, Added command test",
+    },
+    {
+      description: ["You can now use this command in the current chat"],
+      command: "#test",
+      response: "@LinneB, This is a brand new command!",
+    },
+    {
+      description: ["Removing a command is basically the same"],
+      command: "#cmd remove test",
+      response: "@LinneB, Removed command test",
+    },
+  ],
 };

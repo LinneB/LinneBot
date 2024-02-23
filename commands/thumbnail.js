@@ -42,4 +42,12 @@ module.exports = {
     }
     logger.error(`Helix returned unexpected status code ${res.status}`);
   },
+  examples: [
+    {
+      description: ["Get forsens current thumbnail"],
+      command: "#thumbnail forsen",
+      response:
+        "@LinneB, https://static-cdn.jtvnw.net/previews-ttv/live_user_forsen-1920x1080.jpg",
+    },
+  ],
 };

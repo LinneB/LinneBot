@@ -7,6 +7,7 @@
     --link-hover-color: #9fc4c8;
     --hyperlink: #67a9ff;
     --hyperlink-hover: #3b78c7;
+    --command-command: #b0b4fc;
 }
 
 body {
@@ -123,4 +124,22 @@ header b {
     display: flex;
     justify-content: center;
     gap: 20px;
+}
+
+.command-example {
+    font-size: 18px;
+    padding-bottom: 10px;
+}
+
+.command-description {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.command-command {
+    color: var(--command-command);
+}
+
+.command-response {
+    color: var(--bot-username)
 }

@@ -22,4 +22,11 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: ["Search for a video on YouTube"],
+      command: "#youtube racoon eating grapes",
+      response: "@LinneB, https://youtu.be/jNQXAC9IVRw",
+    },
+  ],
 };

@@ -35,4 +35,12 @@ module.exports = {
       }`,
     };
   },
+  examples: [
+    {
+      description: ["Get uptime and bot information"],
+      command: "#ping",
+      response:
+        "@LinneB, Pong! Bot has been up for 2m 50s. Latency to chat: 193ms. Currently in 2 channels",
+    },
+  ],
 };

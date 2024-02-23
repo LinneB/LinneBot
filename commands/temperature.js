@@ -40,4 +40,23 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: ["Convert 70F to real units"],
+      command: "#ftoc 70",
+      response: "@LinneB, 70°F is 21.111°C",
+    },
+    {
+      description: ["Convert 20.5C to freedom units"],
+      command: "#ctof 20.5",
+      response: "@LinneB, 20.5°C is 68.9°F",
+    },
+    {
+      description: [
+        "Convert the temperature of the suns core to freedom units",
+      ],
+      command: "#ctof 15000000",
+      response: "@LinneB, 15,000,000°C is 27,000,032°F",
+    },
+  ],
 };

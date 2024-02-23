@@ -22,4 +22,12 @@ module.exports = {
       reply: `User ${ctx.parameters[0]} not found`,
     };
   },
+  examples: [
+    {
+      description: ["Get some information about a user"],
+      command: "#userinfo linneb",
+      response:
+        "@LinneB, Username: LinneB | User ID: 215185844 | Description: buh | Followers: 23",
+    },
+  ],
 };

@@ -79,4 +79,23 @@ module.exports = {
       reply: `Subscribed to ${subscriptionUsername}. You will be notified when they go live`,
     };
   },
+  examples: [
+    {
+      description: [
+        "Subscribe/unsubscribe to a live notification",
+        'See the <a class="hyperlink" href="https://bot.linneb.xyz/command/livenotif">livenotif</a> command for more info about live notification',
+      ],
+      command: "#notify forsen",
+      response:
+        "@LinneB, Subscribed to forsen. You will be notified when they go live",
+    },
+    {
+      description: [
+        "The command is a toggle, so just run it again to unsubscribe",
+      ],
+      command: "#notify forsen",
+      response:
+        "@LinneB, Unsubscribed from forsen. You will no longer be notified when they go live",
+    },
+  ],
 };

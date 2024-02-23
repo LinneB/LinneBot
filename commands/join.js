@@ -106,4 +106,32 @@ module.exports = {
       }
     }
   },
+  examples: [
+    {
+      description: [
+        "Leaves the current channel. Broadcaster required.",
+        "<b>THIS WILL DELETE ALL COMMANDS, LIVE NOTIFICATIONS, AND OTHER SETTINGS PERMANENTLY</b>",
+      ],
+      command: "#part",
+      response:
+        'This command will leave this chat and DELETE ALL commands and ALL live notifications PERMANENTLY. Use "#part --confirm" to confirm.',
+    },
+    {
+      description: [],
+      command: "#part --confirm",
+      response: "Until we meet again. Parting channel...",
+    },
+    {
+      description: [
+        "If you are an admin, you can use this to join and part any channel",
+      ],
+      command: "#join linneb",
+      response: "@LinneB, Joining channel linneb",
+    },
+    {
+      description: [],
+      command: "#part linneb",
+      response: "@LinneB, Parting channel linneb",
+    },
+  ],
 };

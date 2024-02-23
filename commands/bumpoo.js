@@ -17,4 +17,26 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: [
+        'Get a random bumpoo27 log from <a class="hyperlink" href="https://logs.ivr.fi">logs.ivr.fi</a>',
+      ],
+      command: "#bumpoo",
+      response:
+        "@LinneB, you’re name is chance?! where’d senny come from then dude?!",
+    },
+    {
+      description: [""],
+      command: "#bumpoo",
+      response:
+        "@LinneB, hey dude! dropped ya a follow back on your twitch page here! just know you're messin with the wrong guy! arghhhh!",
+    },
+    {
+      description: [""],
+      command: "#bumpoo",
+      response:
+        "@LinneB, he acts so sassy when he's not in the top right corner of the screen huh?!",
+    },
+  ],
 };

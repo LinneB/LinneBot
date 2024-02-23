@@ -27,4 +27,16 @@ module.exports = {
       reply: `User ${ctx.parameters[0]} not found`,
     };
   },
+  examples: [
+    {
+      description: ["Check if a user is Twitch banned"],
+      command: "#banned linneb",
+      response: "@LinneB, LinneB is not banned",
+    },
+    {
+      description: [""],
+      command: "#banned drdisrespect",
+      response: "@LinneB, BOP DrDisrespect is BANNED. TOS_INDEFINITE",
+    },
+  ],
 };

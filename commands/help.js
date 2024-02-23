@@ -24,4 +24,18 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: ["Sends usage and channel commands"],
+      command: "#help",
+      response:
+        "@LinneB, Usage: #help <command>. For a full list of commands see https://bot.linneb.xyz/commands/linneb",
+    },
+    {
+      description: ['Get information about the "live" command'],
+      command: "#help live",
+      response:
+        "@LinneB, Sends information about a stream. Aliases: [live, stream]. Usage: #live <user>",
+    },
+  ],
 };

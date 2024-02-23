@@ -98,4 +98,25 @@ module.exports = {
       reply: `Usage: ${this.usage}`,
     };
   },
+  examples: [
+    {
+      description: ["Add a channel to the current chats live notifications"],
+      command: "#livenotif add forsen",
+      response: "@LinneB, Subscribed to forsen",
+    },
+    {
+      description: [
+        "The bot will now send a message when that channel goes live",
+      ],
+      response:
+        'https://twitch.tv/forsen just went live playing Just Chatting! "Games and shit!"',
+    },
+    {
+      description: [
+        'You can use the <a class="hyperlink" href="https://bot.linneb.xyz/command/notify">notify</a> command to be added as a subscriber to that subscription',
+      ],
+      response:
+        'https://twitch.tv/forsen just went live playing Just Chatting! "Games and shit!" @linneb',
+    },
+  ],
 };

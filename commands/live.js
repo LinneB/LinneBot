@@ -55,4 +55,19 @@ module.exports = {
     }
     logger.error(`Helix returned unexpected status code ${res.status}`);
   },
+  examples: [
+    {
+      description: ["Get stream information for Forsen"],
+      command: "#live forsen",
+      response:
+        '@LinneB, https://twitch.tv/forsen has been live for 1h, 39m with 8865 viewers playing "Sons of the Forest". Blind playthrough! Permadeath! Hard difficulty!',
+    },
+    {
+      description: [
+        "If the channel is offline, return how long ago their last stream was",
+      ],
+      command: "#live zoil",
+      response: "@LinneB, zoil is offline. They last streamed 1 day ago",
+    },
+  ],
 };

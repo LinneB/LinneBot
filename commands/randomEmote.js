@@ -38,4 +38,11 @@ module.exports = {
       reply: `${emote.name} (${timeAgo ? `${timeAgo} ago` : "just now"})`,
     };
   },
+  examples: [
+    {
+      description: ["Gets a random emote from the current chat"],
+      command: "#randomemote",
+      response: "@LinneB, Emiru (added by linneb 6 months ago)",
+    },
+  ],
 };

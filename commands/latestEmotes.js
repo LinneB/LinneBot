@@ -62,4 +62,18 @@ module.exports = {
       reply: latestEmotes.reverse().join(", "),
     };
   },
+  examples: [
+    {
+      description: ["Get the 5 most recent emotes of the current chat"],
+      command: "#le",
+      response:
+        "@LinneB, War (added by LinneB 5 days ago), BeHonest (added by steve_the_tormentor 8 days ago), $fish (added by LinneB 14 days ago), shibal (added by LinneB 16 days ago), yhourmPOV (added by steve_the_tormentor 16 days ago)",
+    },
+    {
+      description: ["You can also provide a channel"],
+      command: "#le sennyk4",
+      response:
+        "@LinneB, Clean (added by sennyk4 4 hours ago), Oh (added by sennyk4 1 day ago), Skip (added by lenxnn 1 day ago), bestFwends (added by Gekon 1 day ago), bih (added by sennyk4 3 days ago)",
+    },
+  ],
 };
