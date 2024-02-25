@@ -15,7 +15,11 @@ module.exports = {
     }
     if (ctx.parameters.length < 2) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `${
+          ctx.parameters.length < 1
+            ? "No subcommand provided"
+            : "No channel provided"
+        }. Usage: ${this.usage}`,
       };
     }
     const subCommand = ctx.parameters[0].toLowerCase();
@@ -95,7 +99,7 @@ module.exports = {
     }
 
     return {
-      reply: `Usage: ${this.usage}`,
+      reply: `Invalid subcommand provided. Usage: ${this.usage}`,
     };
   },
   examples: [

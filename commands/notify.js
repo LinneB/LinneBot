@@ -10,7 +10,7 @@ module.exports = {
   run: async function (ctx) {
     if (ctx.parameters.length < 1) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `No channel provided. Usage: ${this.usage}`,
       };
     }
 

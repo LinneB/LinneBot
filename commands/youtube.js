@@ -9,7 +9,7 @@ module.exports = {
   run: async function (ctx) {
     if (ctx.parameters < 1) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `No search term provided. Usage: ${this.usage}`,
       };
     }
     const res = await decapi.axios({

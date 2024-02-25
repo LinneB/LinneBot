@@ -15,13 +15,17 @@ module.exports = {
     }
     if (ctx.parameters.length < 2) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `${
+          ctx.parameters.length < 1
+            ? "No subcommand provided"
+            : "No command name provided"
+        }. Usage: ${this.usage}`,
       };
     }
     if (ctx.parameters[0] === "add") {
       if (ctx.parameters.length < 3) {
         return {
-          reply: `Usage: ${this.usage}`,
+          reply: `No reply provided. Usage: ${this.usage}`,
         };
       }
       const commandName = ctx.parameters[1].toLowerCase();

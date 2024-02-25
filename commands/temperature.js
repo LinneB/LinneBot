@@ -7,13 +7,13 @@ module.exports = {
   run: function (ctx) {
     if (ctx.parameters.length < 1) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `No temperature provided. Usage: ${this.usage}`,
       };
     }
     const input = parseFloat(ctx.parameters[0]);
     if (Number.isNaN(input)) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `Temperature is not a number. Usage: ${this.usage}`,
       };
     }
     if (input > Number.MAX_SAFE_INTEGER || input < Number.MIN_SAFE_INTEGER) {

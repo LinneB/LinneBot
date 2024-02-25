@@ -10,7 +10,11 @@ module.exports = {
   run: async function (ctx) {
     if (ctx.parameters.length < 2) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `${
+          ctx.parameters.length < 1
+            ? "No username provided"
+            : "No channel provided"
+        }. Usage: ${this.usage}`,
       };
     }
     const username = ctx.parameters[0];
