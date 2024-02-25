@@ -10,7 +10,7 @@ module.exports = {
   help: "Adds/removes commands from the current chat. Mod required.",
   usage: "#cmd <add|remove> <name> [reply]",
   run: async function (ctx) {
-    if (!ctx.isMod && !ctx.broadcaster && ctx.senderUsername !== "linneb") {
+    if (!ctx.isMod && !ctx.broadcaster && !ctx.admin) {
       return;
     }
     if (ctx.parameters.length < 2) {

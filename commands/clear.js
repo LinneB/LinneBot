@@ -8,7 +8,7 @@ module.exports = {
   help: "Deletes chat. Mod required.",
   usage: "#clear",
   run: async (ctx) => {
-    if (!ctx.isMod && !ctx.broadcaster && ctx.senderUsername !== "linneb") {
+    if (!ctx.isMod && !ctx.broadcaster && !ctx.admin) {
       return {};
     }
     const botUserID = await ivr.usernameToID(process.env.BOT_USERNAME);

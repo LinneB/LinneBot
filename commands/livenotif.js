@@ -10,7 +10,7 @@ module.exports = {
   help: "Adds/removes channels from livenotif. Mod required.",
   usage: "#livenotif <add|remove> <channel>",
   run: async function (ctx) {
-    if (!ctx.isMod && !ctx.broadcaster && ctx.senderUsername !== "linneb") {
+    if (!ctx.isMod && !ctx.broadcaster && !ctx.admin) {
       return;
     }
     if (ctx.parameters.length < 2) {

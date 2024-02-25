@@ -10,11 +10,11 @@ module.exports = {
   help: "Joins/parts channels. Broadcaster or admin required.",
   usage: "#<join|part> [args]",
   run: async (ctx) => {
-    if (!ctx.broadcaster && ctx.senderUsername !== "linneb") return;
+    if (!ctx.broadcaster && !ctx.admin) return;
 
     const command = ctx.command.slice(1);
     if (command === "join") {
-      if (ctx.senderUsername !== "linneb") return;
+      if (!ctx.admin) return;
       if (ctx.parameters.length < 1) {
         return {
           reply: "No channel provided",
@@ -72,7 +72,7 @@ module.exports = {
         };
       }
 
-      if (ctx.senderUsername === "linneb") {
+      if (ctx.admin) {
         if (ctx.parameters.length < 1) {
           return {
             reply: "No channel provided",

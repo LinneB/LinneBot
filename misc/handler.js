@@ -24,6 +24,8 @@ function buildMessageContext(msg) {
     roomID: msg.channelID,
     roomName: msg.channelName,
     isMod: msg.isMod,
+    // TODO: Configurable "admin" users
+    admin: msg.senderUsername === "linneb",
     ircMsg: msg,
   };
 }
