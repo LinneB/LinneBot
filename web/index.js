@@ -1,8 +1,8 @@
 const express = require("express");
-const morgan = require("morgan");
 const path = require("path");
 const { getConfig } = require("../misc/config");
-const logger = require("../misc/logger").getLogger("web/index.js");
+const log4js = require("../misc/logger");
+const logger = log4js.getLogger("web/index");
 const commands = require("../misc/commands");
 const tmiClient = require("../providers/irc");
 const db = require("../providers/postgres");
@@ -11,7 +11,7 @@ const port = getConfig("port") || 8080;
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(morgan("short"));
+app.use(log4js.connectLogger(log4js.getLogger("http"), { level: "info" }));
 
 app.get("/", (req, res) => {
   const channels = [...tmiClient.joinedChannels];
