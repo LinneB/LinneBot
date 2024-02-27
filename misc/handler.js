@@ -41,7 +41,9 @@ exports.onChat = async (msg) => {
   if (command) {
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
       logger.info(`Executing ${command.name}`);
-      const result = await command.run(ctx);
+      const result = await command
+        .run(ctx)
+        .catch((e) => logger.error("Command execution failed:", e));
       if (result?.reply) {
         tmiClient.sendMessage(
           ctx.roomName,
