@@ -8,8 +8,8 @@
     "rules": {
       "recommended": true,
       "correctness": {
-          "noUnusedVariables": "error",
-          "noUndeclaredVariables": "error"
+        "noUnusedVariables": "error",
+        "noUndeclaredVariables": "error"
       }
     }
   },
