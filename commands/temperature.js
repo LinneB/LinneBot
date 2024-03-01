@@ -21,7 +21,7 @@ module.exports = {
         reply: "That number is too big WTRuck",
       };
     }
-    if (ctx.command === "#ctof") {
+    if (ctx.command === "ctof") {
       const temp_c = input;
       const temp_f = (temp_c * 9) / 5 + 32;
       return {
@@ -30,7 +30,7 @@ module.exports = {
         )}°F`,
       };
     }
-    if (ctx.command === "#ftoc") {
+    if (ctx.command === "ftoc") {
       const temp_f = input;
       const temp_c = ((temp_f - 32) * 5) / 9;
       return {

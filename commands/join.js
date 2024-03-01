@@ -12,8 +12,7 @@ module.exports = {
   run: async (ctx) => {
     if (!ctx.broadcaster && !ctx.admin) return;
 
-    const command = ctx.command.slice(1);
-    if (command === "join") {
+    if (ctx.command === "join") {
       if (!ctx.admin) return;
       if (ctx.parameters.length < 1) {
         return {
@@ -44,7 +43,7 @@ module.exports = {
       };
     }
 
-    if (command === "part") {
+    if (ctx.command === "part") {
       if (ctx.broadcaster) {
         if (ctx.parameters.length < 1) {
           return {

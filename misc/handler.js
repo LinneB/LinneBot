@@ -10,7 +10,6 @@ const logger = require("../misc/logger").getLogger("handler");
 
 function buildMessageContext(msg) {
   const args = msg.messageText.split(" ").filter((c) => c.trim());
-  const command = args[0].toLowerCase();
 
   return {
     message: msg.messageText,
@@ -18,7 +17,6 @@ function buildMessageContext(msg) {
     senderDisplayName: msg.displayName,
     senderUserID: msg.senderUserID,
     args: args,
-    command: command,
     parameters: args.slice(1),
     broadcaster: msg.senderUserID === msg.channelID,
     roomID: msg.channelID,
@@ -43,12 +41,14 @@ exports.onChat = async (msg) => {
     return;
   }
 
-  const prefix = chat.prefix;
-  if (!ctx.command.startsWith(prefix)) {
+  ctx.prefix = chat.prefix;
+  ctx.command = ctx.args[0].slice(ctx.prefix.length).toLowerCase();
+  if (!ctx.args[0].startsWith(ctx.prefix)) {
     return;
   }
+
   // Interactive command
-  const command = commands.getCommandByAlias(ctx.command.slice(prefix.length));
+  const command = commands.getCommandByAlias(ctx.command);
   if (command) {
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
       logger.info(`Executing ${command.name}`);
@@ -69,7 +69,7 @@ exports.onChat = async (msg) => {
   // TODO: Global static commands, eg. #github
   const result = await db.pool.query(db.queries.SELECT.getCommand, [
     ctx.roomID,
-    ctx.command.slice(prefix.length),
+    ctx.command,
   ]);
   if (result.rowCount >= 1) {
     const staticCommand = result.rows[0];
