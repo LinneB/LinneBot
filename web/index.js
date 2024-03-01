@@ -13,7 +13,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(log4js.connectLogger(log4js.getLogger("http"), { level: "info" }));
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   const channels = [...tmiClient.joinedChannels];
   res.render("pages/home", {
     channels: channels,
@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/commands", (req, res) => {
+app.get("/commands", (_req, res) => {
   res.render("pages/commands", {
     commands: commands.commands,
   });
