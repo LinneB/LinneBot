@@ -64,11 +64,17 @@ exports.queries = {
 
     // Gets chats
     getChats: "SELECT * FROM chats GROUP BY user_id",
+
+    // Get chat by userID
+    getChat: "SELECT * FROM chats WHERE user_id = $1",
   },
   UPDATE: {
     // Updates command reply by chatID and command name
     updateCommand:
       "UPDATE commands SET reply = $3 WHERE chat_id = $1 AND name = $2",
+
+    // Updates prefix by chatID and prefix
+    updatePrefix: "UPDATE chats SET prefix = $2 WHERE user_id = $1",
   },
   DELETE: {
     // Removes command by chatID and command name

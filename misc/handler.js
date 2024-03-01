@@ -31,13 +31,24 @@ function buildMessageContext(msg) {
 }
 
 exports.onChat = async (msg) => {
-  const prefix = getConfig("prefix");
   const ctx = buildMessageContext(msg);
+  const chat = await db.pool
+    .query({
+      text: db.queries.SELECT.getChat,
+      values: [ctx.roomID],
+    })
+    .then((res) => res.rows[0]);
+  if (!chat) {
+    logger.error("Got a message in a chat not in database, ignoring");
+    return;
+  }
+
+  const prefix = chat.prefix;
   if (!ctx.command.startsWith(prefix)) {
     return;
   }
   // Interactive command
-  const command = commands.getCommandByAlias(ctx.command);
+  const command = commands.getCommandByAlias(ctx.command.slice(prefix.length));
   if (command) {
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
       logger.info(`Executing ${command.name}`);
@@ -58,7 +69,7 @@ exports.onChat = async (msg) => {
   // TODO: Global static commands, eg. #github
   const result = await db.pool.query(db.queries.SELECT.getCommand, [
     ctx.roomID,
-    ctx.command.slice(1),
+    ctx.command.slice(prefix.length),
   ]);
   if (result.rowCount >= 1) {
     const staticCommand = result.rows[0];

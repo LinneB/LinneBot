@@ -1,4 +1,5 @@
 const commands = require("../misc/commands");
+const db = require("../providers/postgres");
 
 module.exports = {
   name: "help",
@@ -12,9 +13,19 @@ module.exports = {
         reply: `Usage: #help <command>. For a full list of commands see https://bot.linneb.xyz/commands/${ctx.roomName}`,
       };
     }
-    const search = ctx.parameters[0].startsWith("#")
-      ? ctx.parameters[0]
-      : `#${ctx.parameters[0]}`;
+
+    const chat = db.pool
+      .query({
+        text: db.queries.SELECT.getChat,
+        values: [ctx.roomID],
+      })
+      .then((res) => res.rows[0]);
+
+    const prefix = chat.prefix;
+    const search = ctx.parameters[0].startsWith(prefix)
+      ? ctx.parameters[0].slice(prefix.length)
+      : ctx.parameters[0];
+
     const command = commands.getCommandByAlias(search);
     if (command) {
       return {
@@ -25,6 +36,9 @@ module.exports = {
         }. More information: https://bot.linneb.xyz/command/${command.name}`,
       };
     }
+    return {
+      reply: `Command not found. For a full list of commands see https://bot.linneb.xyz/commands/${ctx.roomName}`,
+    };
   },
   examples: [
     {

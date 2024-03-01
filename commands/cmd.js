@@ -51,8 +51,7 @@ module.exports = {
         };
       }
 
-      const prefix = getConfig("prefix");
-      if (commands.getCommandByAlias(prefix + commandName)) {
+      if (commands.getCommandByAlias(commandName)) {
         return {
           reply: `${commandName} is already a command`,
         };

@@ -13,11 +13,10 @@ exports.add = function (command) {
 };
 
 exports.getCommandByAlias = function (alias) {
-  const prefix = getConfig("prefix");
   for (const commandName in this.commands) {
     const command = this.commands[commandName];
     for (const commandAlias of command.aliases) {
-      if (prefix + commandAlias === alias.toLowerCase()) {
+      if (commandAlias === alias.toLowerCase()) {
         return command;
       }
     }
