@@ -75,6 +75,9 @@ exports.queries = {
 
     // Updates prefix by chatID and prefix
     updatePrefix: "UPDATE chats SET prefix = $2 WHERE user_id = $1",
+
+    // Updates blacklist by chatID and blacklist
+    updateBlacklist: "UPDATE chats SET blacklist = $2 WHERE user_id = $1",
   },
   DELETE: {
     // Removes command by chatID and command name

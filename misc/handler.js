@@ -46,6 +46,9 @@ exports.onChat = async (msg) => {
   if (!ctx.args[0].startsWith(ctx.prefix)) {
     return;
   }
+  if (chat.blacklist.includes(ctx.command)) {
+    return;
+  }
 
   // Interactive command
   const command = commands.getCommandByAlias(ctx.command);
