@@ -60,7 +60,7 @@ module.exports = {
             values: [userid],
           })
           .then(() => {
-            tmiClient.part(channel);
+            tmiClient.part(ctx.senderUsername);
           })
           .catch((err) => {
             logger.error(err);
