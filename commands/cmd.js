@@ -1,7 +1,6 @@
 const db = require("../providers/postgres");
 const commands = require("../misc/commands");
 const logger = require("../misc/logger").getLogger("cmd/cmd");
-const { getConfig } = require("../misc/config");
 
 module.exports = {
   name: "cmd",
