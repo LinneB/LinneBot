@@ -17,4 +17,12 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: ["Sends the latest emiru youtube video"],
+      command: "#emiru",
+      response:
+        "@LinneB, Emiru Admits To Being A Furry - https://youtu.be/4e-0NhgcFUc",
+    },
+  ],
 };

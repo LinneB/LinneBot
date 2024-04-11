@@ -15,4 +15,11 @@ module.exports = {
       reply: result,
     };
   },
+  examples: [
+    {
+      description: ["Spin the wheel"],
+      command: "#spin",
+      response: "@LinneB, 🍒 🍒 🥒",
+    },
+  ],
 };

@@ -64,11 +64,20 @@ exports.queries = {
 
     // Gets chats
     getChats: "SELECT * FROM chats GROUP BY user_id",
+
+    // Get chat by userID
+    getChat: "SELECT * FROM chats WHERE user_id = $1",
   },
   UPDATE: {
     // Updates command reply by chatID and command name
     updateCommand:
       "UPDATE commands SET reply = $3 WHERE chat_id = $1 AND name = $2",
+
+    // Updates prefix by chatID and prefix
+    updatePrefix: "UPDATE chats SET prefix = $2 WHERE user_id = $1",
+
+    // Updates blacklist by chatID and blacklist
+    updateBlacklist: "UPDATE chats SET blacklist = $2 WHERE user_id = $1",
   },
   DELETE: {
     // Removes command by chatID and command name
@@ -81,5 +90,8 @@ exports.queries = {
     // Removes subscriber by chatID and subscriber username and subscription ID
     deleteSubscriber:
       "DELETE FROM subscribers WHERE chat_id = $1 AND subscriber_username = $2 AND subscription_id = $3",
+
+    // Removes a chat by userid
+    deleteChat: "DELETE FROM chats WHERE user_id = $1",
   },
 };

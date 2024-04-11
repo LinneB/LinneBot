@@ -7,4 +7,12 @@ module.exports = {
   run: (ctx) => ({
     reply: `List of commands: https://bot.linneb.xyz/commands/${ctx.roomName}`,
   }),
+  examples: [
+    {
+      description: ["Self explanatory"],
+      command: "#commands",
+      response:
+        "@LinneB, List of commands: https://bot.linneb.xyz/commands/linneb",
+    },
+  ],
 };

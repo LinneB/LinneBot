@@ -11,7 +11,7 @@ module.exports = {
   run: async function (ctx) {
     if (ctx.parameters.length < 1) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `No channel provided. Usage: ${this.usage}`,
       };
     }
     const channel = ctx.parameters[0];
@@ -42,4 +42,12 @@ module.exports = {
     }
     logger.error(`Helix returned unexpected status code ${res.status}`);
   },
+  examples: [
+    {
+      description: ["Get forsens current thumbnail"],
+      command: "#thumbnail forsen",
+      response:
+        "@LinneB, https://static-cdn.jtvnw.net/previews-ttv/live_user_forsen-1920x1080.jpg",
+    },
+  ],
 };

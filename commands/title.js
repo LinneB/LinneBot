@@ -30,4 +30,18 @@ module.exports = {
     }
     logger.error(`Helix returned unexpected status code ${res.status}`);
   },
+  examples: [
+    {
+      description: ["Get the current chats title"],
+      command: "#title",
+      response:
+        "@LinneB, LinneB's title is: gaycatwithsweetbabysrayhoneymustart",
+    },
+    {
+      description: ["Get forsens current title"],
+      command: "#title forsen",
+      response:
+        "@LinneB, forsen's title is: Blind playthrough! Permadeath! Hard difficulty!",
+    },
+  ],
 };

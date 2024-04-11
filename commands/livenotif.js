@@ -10,12 +10,16 @@ module.exports = {
   help: "Adds/removes channels from livenotif. Mod required.",
   usage: "#livenotif <add|remove> <channel>",
   run: async function (ctx) {
-    if (!ctx.isMod && !ctx.broadcaster && ctx.senderUsername !== "linneb") {
+    if (!ctx.isMod && !ctx.broadcaster && !ctx.admin) {
       return;
     }
     if (ctx.parameters.length < 2) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `${
+          ctx.parameters.length < 1
+            ? "No subcommand provided"
+            : "No channel provided"
+        }. Usage: ${this.usage}`,
       };
     }
     const subCommand = ctx.parameters[0].toLowerCase();
@@ -95,7 +99,28 @@ module.exports = {
     }
 
     return {
-      reply: `Usage: ${this.usage}`,
+      reply: `Invalid subcommand provided. Usage: ${this.usage}`,
     };
   },
+  examples: [
+    {
+      description: ["Add a channel to the current chats live notifications"],
+      command: "#livenotif add forsen",
+      response: "@LinneB, Subscribed to forsen",
+    },
+    {
+      description: [
+        "The bot will now send a message when that channel goes live",
+      ],
+      response:
+        'https://twitch.tv/forsen just went live playing Just Chatting! "Games and shit!"',
+    },
+    {
+      description: [
+        'You can use the <a class="hyperlink" href="https://bot.linneb.xyz/command/notify">notify</a> command to be added as a subscriber to that subscription',
+      ],
+      response:
+        'https://twitch.tv/forsen just went live playing Just Chatting! "Games and shit!" @linneb',
+    },
+  ],
 };

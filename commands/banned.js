@@ -9,7 +9,7 @@ module.exports = {
   run: async function (ctx) {
     if (ctx.parameters.length < 1) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `No username provided. Usage: ${this.usage}`,
       };
     }
     const user = await ivr.getUser(ctx.parameters[0]);
@@ -27,4 +27,16 @@ module.exports = {
       reply: `User ${ctx.parameters[0]} not found`,
     };
   },
+  examples: [
+    {
+      description: ["Check if a user is Twitch banned"],
+      command: "#banned linneb",
+      response: "@LinneB, LinneB is not banned",
+    },
+    {
+      description: [""],
+      command: "#banned drdisrespect",
+      response: "@LinneB, BOP DrDisrespect is BANNED. TOS_INDEFINITE",
+    },
+  ],
 };

@@ -1,7 +1,6 @@
 const db = require("../providers/postgres");
 const commands = require("../misc/commands");
 const logger = require("../misc/logger").getLogger("cmd/cmd");
-const { getConfig } = require("../misc/config");
 
 module.exports = {
   name: "cmd",
@@ -10,18 +9,22 @@ module.exports = {
   help: "Adds/removes commands from the current chat. Mod required.",
   usage: "#cmd <add|remove> <name> [reply]",
   run: async function (ctx) {
-    if (!ctx.isMod && !ctx.broadcaster && ctx.senderUsername !== "linneb") {
+    if (!ctx.isMod && !ctx.broadcaster && !ctx.admin) {
       return;
     }
     if (ctx.parameters.length < 2) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `${
+          ctx.parameters.length < 1
+            ? "No subcommand provided"
+            : "No command name provided"
+        }. Usage: ${this.usage}`,
       };
     }
     if (ctx.parameters[0] === "add") {
       if (ctx.parameters.length < 3) {
         return {
-          reply: `Usage: ${this.usage}`,
+          reply: `No reply provided. Usage: ${this.usage}`,
         };
       }
       const commandName = ctx.parameters[1].toLowerCase();
@@ -47,8 +50,7 @@ module.exports = {
         };
       }
 
-      const prefix = getConfig("prefix");
-      if (commands.getCommandByAlias(prefix + commandName)) {
+      if (commands.getCommandByAlias(commandName)) {
         return {
           reply: `${commandName} is already a command`,
         };
@@ -95,4 +97,21 @@ module.exports = {
       };
     }
   },
+  examples: [
+    {
+      description: ['Adds a command named "test"'],
+      command: "#cmd add test This is a brand new command!",
+      response: "@LinneB, Added command test",
+    },
+    {
+      description: ["You can now use this command in the current chat"],
+      command: "#test",
+      response: "@LinneB, This is a brand new command!",
+    },
+    {
+      description: ["Removing a command is basically the same"],
+      command: "#cmd remove test",
+      response: "@LinneB, Removed command test",
+    },
+  ],
 };

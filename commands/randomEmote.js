@@ -19,8 +19,30 @@ module.exports = {
     const timeAgo = utils.formattedTimeAgoString(
       Date.now() - new Date(emote.timestamp),
     );
+
+    const actor = await seventv
+      .axios({
+        method: "get",
+        url: `/users/${emote.actor_id}`,
+      })
+      .then((res) => res.data.display_name);
+
+    if (actor) {
+      return {
+        reply: `${emote.name} (added by ${actor} ${
+          timeAgo ? `${timeAgo} ago` : "just now"
+        })`,
+      };
+    }
     return {
       reply: `${emote.name} (${timeAgo ? `${timeAgo} ago` : "just now"})`,
     };
   },
+  examples: [
+    {
+      description: ["Gets a random emote from the current chat"],
+      command: "#randomemote",
+      response: "@LinneB, Emiru (added by linneb 6 months ago)",
+    },
+  ],
 };

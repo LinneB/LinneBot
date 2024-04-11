@@ -23,4 +23,16 @@ module.exports = {
       reply: `User ${username} not found`,
     };
   },
+  examples: [
+    {
+      description: ["Get your own follow count"],
+      command: "#followers",
+      response: "@LinneB, LinneB has 23 followers",
+    },
+    {
+      description: ["Get Forsen's follow count"],
+      command: "#followers forsen",
+      response: "@LinneB, forsen has 1,739,372 followers",
+    },
+  ],
 };

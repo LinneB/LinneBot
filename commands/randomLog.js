@@ -10,7 +10,11 @@ module.exports = {
   run: async function (ctx) {
     if (ctx.parameters.length < 2) {
       return {
-        reply: `Usage: ${this.usage}`,
+        reply: `${
+          ctx.parameters.length < 1
+            ? "No username provided"
+            : "No channel provided"
+        }. Usage: ${this.usage}`,
       };
     }
     const username = ctx.parameters[0];
@@ -35,4 +39,14 @@ module.exports = {
     }
     logger.error(`Justlog returned unexpected status code ${res.status}`);
   },
+  examples: [
+    {
+      description: [
+        'Get a random log for a user in a channel from <a class="hyperlink" href="https://logs.ivr.fi">logs.ivr.fi</a>',
+      ],
+      command: "#rl linneb forsen",
+      response:
+        "@LinneB, [2023-09-09 20:28:00] LinneB: elisDancing LETS elisDancing GO elisDancing FORSEN elisDancing",
+    },
+  ],
 };

@@ -10,7 +10,6 @@ const logger = require("../misc/logger").getLogger("handler");
 
 function buildMessageContext(msg) {
   const args = msg.messageText.split(" ").filter((c) => c.trim());
-  const command = args[0].toLowerCase();
 
   return {
     message: msg.messageText,
@@ -18,33 +17,54 @@ function buildMessageContext(msg) {
     senderDisplayName: msg.displayName,
     senderUserID: msg.senderUserID,
     args: args,
-    command: command,
     parameters: args.slice(1),
     broadcaster: msg.senderUserID === msg.channelID,
     roomID: msg.channelID,
     roomName: msg.channelName,
     isMod: msg.isMod,
+    // TODO: Configurable "admin" users
+    admin: msg.senderUsername === "linneb",
     ircMsg: msg,
   };
 }
 
 exports.onChat = async (msg) => {
-  const prefix = getConfig("prefix");
   const ctx = buildMessageContext(msg);
-  if (!ctx.command.startsWith(prefix)) {
+  const chat = await db.pool
+    .query({
+      text: db.queries.SELECT.getChat,
+      values: [ctx.roomID],
+    })
+    .then((res) => res.rows[0]);
+  if (!chat) {
+    logger.error("Got a message in a chat not in database, ignoring");
     return;
   }
+
+  ctx.prefix = chat.prefix;
+  ctx.command = ctx.args[0].slice(ctx.prefix.length).toLowerCase();
+  if (!ctx.args[0].startsWith(ctx.prefix)) {
+    return;
+  }
+  if (chat.blacklist.includes(ctx.command)) {
+    return;
+  }
+
   // Interactive command
   const command = commands.getCommandByAlias(ctx.command);
   if (command) {
     if (commands.isOnCooldown(ctx.senderUserID, command)) {
       logger.info(`Executing ${command.name}`);
-      const result = await command.run(ctx);
-      if (result?.reply) {
-        tmiClient.sendMessage(
-          ctx.roomName,
-          `@${ctx.senderDisplayName}, ${result.reply}`,
-        );
+      try {
+        const result = await command.run(ctx);
+        if (result?.reply) {
+          tmiClient.sendMessage(
+            ctx.roomName,
+            `@${ctx.senderDisplayName}, ${result.reply}`,
+          );
+        }
+      } catch (e) {
+        logger.error("Command execution failed:", e);
       }
     }
   }
@@ -52,7 +72,7 @@ exports.onChat = async (msg) => {
   // TODO: Global static commands, eg. #github
   const result = await db.pool.query(db.queries.SELECT.getCommand, [
     ctx.roomID,
-    ctx.command.slice(1),
+    ctx.command,
   ]);
   if (result.rowCount >= 1) {
     const staticCommand = result.rows[0];

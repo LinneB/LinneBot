@@ -1,6 +1,8 @@
 CREATE TABLE chats (
   user_id integer NOT NULL,
   user_name varchar(50) NOT NULL,
+  prefix varchar(2) NOT NULL DEFAULT '#',
+  blacklist json NOT NULL DEFAULT '[]',
   PRIMARY KEY (user_id)
 );
 
