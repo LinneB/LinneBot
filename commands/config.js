@@ -9,7 +9,6 @@ module.exports = {
   usage: "#config <option> [args]",
   run: async function (ctx) {
     if (!ctx.broadcaster && !ctx.admin) {
-      logger.debug("Not admin or broadcaster");
       return;
     }
     if (ctx.parameters.length < 1) {
@@ -59,7 +58,9 @@ module.exports = {
         };
       }
       default: {
-        break;
+        return {
+          reply: "Invalid option provided.",
+        };
       }
     }
   },
