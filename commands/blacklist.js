@@ -94,7 +94,7 @@ module.exports = {
   },
   examples: [
     {
-      description: ["Add live the command blacklist"],
+      description: ["Add live command to command blacklist"],
       command: "#blacklist add live",
       response: "@LinneB, Added live to command blacklist",
     },
