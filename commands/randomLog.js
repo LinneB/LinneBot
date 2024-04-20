@@ -20,7 +20,7 @@ export default {
         }
         const username = ctx.parameters[0];
         const channel = ctx.parameters[1];
-        const res = await justlog.axios({
+        const res = await justlog({
             method: "get",
             url: `/channel/${channel}/user/${username}/random?jsonBasic=true`,
         });
