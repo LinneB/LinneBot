@@ -1,6 +1,11 @@
-const axios = require("axios");
+import AXIOS from "axios";
 
-exports.axios = axios.create({
-  baseURL: "https://logs.ivr.fi",
-  validateStatus: false,
+const axios = AXIOS.create({
+    baseURL: "https://logs.ivr.fi",
+    validateStatus: false,
+    headers: {
+        "User-Agent": "LinneB/LinneBot (https://github.com/LinneB/LinneBot)",
+    },
 });
+
+export default axios;

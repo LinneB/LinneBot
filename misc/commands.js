@@ -1,57 +1,70 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import log4js from "./logger.js";
+const logger = log4js.getLogger("commands");
+import path from "node:path";
+const __dirname = import.meta.dirname;
 
-exports.commands = {};
-exports.cooldowns = {};
+export const commands = {};
+const cooldowns = {};
 
-exports.add = function (command) {
-  if (command.name in this.commands) {
-    return;
-  }
-  this.commands[command.name] = command;
-};
+// Somehow this block allows commands/help.js to import commands
+(async () => {
+    const files = fs
+        .readdirSync(path.join(__dirname, "../commands"))
+        .filter((file) => file.endsWith(".js"));
 
-exports.getCommandByAlias = function (alias) {
-  for (const commandName in this.commands) {
-    const command = this.commands[commandName];
-    for (const commandAlias of command.aliases) {
-      if (commandAlias === alias.toLowerCase()) {
-        return command;
-      }
+    logger.debug(`Loading ${files.length} command files`);
+    for (const file of files) {
+        const commandPath = path.join("../commands", file);
+        const command = await import(commandPath).then((c) => c.default);
+        commands[command.name] = command;
     }
-  }
-  return null;
-};
+    logger.debug("Finished loading commands");
+})();
 
-exports.isOnCooldown = function (userid, command) {
-  const currentTime = Date.now();
-  if (!this.cooldowns[command.name]) {
-    this.cooldowns[command.name] = {};
-  }
-  if (this.cooldowns[command.name][userid]) {
-    if (currentTime - this.cooldowns[command.name][userid] > command.cooldown) {
-      this.cooldowns[command.name][userid] = currentTime;
-      return true;
+export function getCommandByAlias(alias) {
+    for (const command of Object.values(commands)) {
+        for (const commandAlias of command.aliases) {
+            if (commandAlias === alias.toLowerCase()) {
+                return command;
+            }
+        }
     }
-    return false;
-  }
-  this.cooldowns[command.name][userid] = currentTime;
-  return true;
-};
-
-exports.getCommandByName = function (name) {
-  for (const commandName in this.commands) {
-    const command = this.commands[commandName];
-    if (command.name.toLowerCase() === name.toLowerCase()) {
-      return command;
-    }
-  }
-  return null;
-};
-
-const files = fs
-  .readdirSync(path.join(__dirname, "../commands"))
-  .filter((file) => file.endsWith(".js"));
-for (const file of files) {
-  this.add(require(path.join(__dirname, "../commands", file)));
+    return null;
 }
+
+export function getCommandByName(name) {
+    for (const command of Object.values(commands)) {
+        if (command.name.toLowerCase() === name.toLowerCase()) {
+            return command;
+        }
+    }
+    return null;
+}
+
+export function isOnCooldown(userid, command) {
+    const curTime = Date.now();
+    const { name, cooldown } = command;
+    if (!cooldowns[name]) {
+        cooldowns[name] = {};
+    }
+    if (cooldowns[name][userid]) {
+        if (curTime - cooldowns[name][userid] > cooldown) {
+            // User waited out the cooldown period
+            cooldowns[name][userid] = curTime;
+            return false;
+        }
+        // User is still on cooldown
+        return true;
+    }
+    // First time executing command
+    cooldowns[name][userid] = curTime;
+    return false;
+}
+
+export default {
+    commands,
+    getCommandByAlias,
+    getCommandByName,
+    isOnCooldown,
+};

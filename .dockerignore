@@ -6,4 +6,4 @@ Dockerfile*
 .env
 config.json
 node_modules
-biome.json
+.eslintrc.json

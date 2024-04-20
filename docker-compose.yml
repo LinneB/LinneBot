@@ -1,14 +1,9 @@
-version: '3'
 services:
-  linnebot:
-    restart: always
-    build: .
-    volumes:
-      - $PWD/config.json:/usr/src/app/config.json
-    environment:
-      NODE_ENV: production
-    env_file:
-      - .env
-    ports:
-      # Website + EventSub port
-      - 8080:8080
+    linnebot:
+        restart: always
+        build: .
+        environment:
+            NODE_ENV: production
+        env_file:
+            - .env
+        network_mode: host
