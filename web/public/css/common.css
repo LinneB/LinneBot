@@ -141,5 +141,5 @@ header b {
 }
 
 .command-response {
-    color: var(--bot-username)
+    color: var(--bot-username);
 }

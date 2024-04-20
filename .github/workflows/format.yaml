@@ -1,30 +1,30 @@
-name: Biome Formatting
+name: Check Prettier formatting
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
-  biome:
-    name: Run Biome Formatter
-    runs-on: ubuntu-latest
+    prettier:
+        name: Run Prettier formatter
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 21
+                  cache: "npm"
 
-      - name: Install Dependencies
-        run: npm install
+            - name: Install Dependencies
+              run: npm install
 
-      - name: Run Biome
-        run: npm run check
+            - name: Run Prettier
+              run: npm run check
