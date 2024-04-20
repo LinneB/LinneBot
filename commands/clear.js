@@ -1,5 +1,5 @@
 import helix from "../providers/helix.js";
-import ivr from "../providers/helix.js";
+import ivr from "../providers/ivr.js";
 
 export default {
     name: "clear",
