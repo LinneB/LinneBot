@@ -47,6 +47,7 @@ async function onMessage(msg) {
 
     ctx.prefix = chat.prefix;
     ctx.command = ctx.args[0].slice(ctx.prefix.length);
+    ctx.blacklist = chat.blacklist;
 
     for (const interceptor of interceptors) {
         const reply = await interceptor(ctx);

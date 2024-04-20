@@ -4,8 +4,9 @@ const logger = log4js.getLogger("interceptor/command");
 
 async function interceptor(ctx) {
     const command = commands.getCommandByAlias(ctx.command);
-    if (!command) return;
+    if (!command || ctx.blacklist.includes(command.name)) return;
     if (commands.isOnCooldown(ctx.senderUserID, command)) return;
+
     logger.info("Executing command", command.name);
     const currentTime = Date.now();
     try {
