@@ -8,7 +8,7 @@ For major changes, you can contact me on [Twitch](https://twitch.tv/LinneB) or y
 
 ### Linting and formatting
 
-This project uses [ESLint](https://biomejs.dev) for linting and [Prettier](https://prettier.io) for formatting. There are NPM scripts for both if you can't be bothered to install the plugin for your editor.
+This project uses [ESLint](https://eslint.org) for linting and [Prettier](https://prettier.io) for formatting. There are NPM scripts for both if you can't be bothered to install the plugin for your editor.
 
 **Make sure you run `npm run lint` and `npm run format` before commiting**
 
