@@ -12,7 +12,7 @@ async function interceptor(ctx) {
     try {
         const result = await command.run(ctx);
         if (!result) {
-            logger.error("Command execution returned null value");
+            return;
         }
         if (result.reply) {
             logger.debug(
