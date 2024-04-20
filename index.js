@@ -174,7 +174,6 @@ irc.on("ready", onReady);
 tes.on("stream.online", onLive);
 
 irc.connect();
-irc.join("emirualtaccount");
 
 process.on("SIGTERM", () => {
     logger.info("Exiting...");
