@@ -49,6 +49,8 @@ async function onMessage(msg) {
     ctx.command = ctx.args[0].slice(ctx.prefix.length);
     ctx.blacklist = chat.blacklist;
 
+    if (!ctx.message.startsWith(ctx.prefix)) return;
+
     for (const interceptor of interceptors) {
         const reply = await interceptor(ctx);
         if (reply) {
