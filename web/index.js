@@ -13,7 +13,6 @@ app.set("view engine", "ejs");
 app.use(log4js.connectLogger(log4js.getLogger("http"), { level: "info" }));
 
 app.get("/", (_req, res) => {
-    console.log(commands, tmiClient.joinedChannels);
     const channels = [...tmiClient.joinedChannels];
     res.render("pages/home", {
         channels: channels,
