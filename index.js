@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "./misc/commandServer.js";
 import db from "./providers/postgres.js";
 import helix from "./providers/helix.js";
 import interceptors from "./interceptors/index.js";
