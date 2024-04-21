@@ -56,7 +56,7 @@ app.post("/run", async (req, res) => {
         if (result?.reply) {
             res.status(200).send({
                 reply: result.reply,
-                time: Date.now() - curTime
+                time: Date.now() - curTime,
             });
             return;
         }
