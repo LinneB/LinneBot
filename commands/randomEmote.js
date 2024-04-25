@@ -9,7 +9,7 @@ export default {
     usage: "#randomemote",
     run: async (ctx) => {
         const userid = ctx.roomID;
-        const emotes = await seventv.getEmoteSet(userid);
+        const emotes = await seventv.getEmotes(userid);
         if (emotes.length === 0) {
             return {
                 reply: "This channel does not have any 7tv emotes",
@@ -20,16 +20,11 @@ export default {
             Date.now() - new Date(emote.timestamp),
         );
 
-        const actor = await seventv
-            .axios({
-                method: "get",
-                url: `/users/${emote.actor_id}`,
-            })
-            .then((res) => res.data.display_name);
+        const actor = await seventv.getUser(emote.actor_id);
 
         if (actor) {
             return {
-                reply: `${emote.name} (added by ${actor} ${
+                reply: `${emote.name} (added by ${actor.display_name} ${
                     timeAgo ? `${timeAgo} ago` : "just now"
                 })`,
             };
