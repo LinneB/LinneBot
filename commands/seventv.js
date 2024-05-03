@@ -83,7 +83,7 @@ export default {
                 reply: 'Bot is not a 7TV editor. Make sure to add it with the "Modify emotes" permission',
             };
         }
-        if (!editors.includes(senderUser.user.id)) {
+        if (!editors.includes(senderUser.user.id) && !ctx.broadcaster) {
             return { reply: "You are not an editor of the current chat" };
         }
 
