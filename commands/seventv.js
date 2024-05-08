@@ -209,13 +209,13 @@ export default {
                 return {
                     reply: `${
                         ctx.parameters.length < 2
-                            ? "No emote name provided"
-                            : "No channel provided"
+                            ? "No channel provided"
+                            : "No emote name provided"
                     }. Usage: ${this.usage}`,
                 };
             }
-            const emote = ctx.parameters[1];
-            const channel = ctx.parameters[2].toLowerCase();
+            const channel = ctx.parameters[1].toLowerCase();
+            const emote = ctx.parameters[2];
 
             if (channel === ctx.roomName.toLowerCase()) {
                 return { reply: "You can't steal from yourself!" };
