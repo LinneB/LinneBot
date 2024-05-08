@@ -22,12 +22,15 @@ You will need a few things to set it up:
 -   A [PostgreSQL](https://hub.docker.com/_/postgres) database (see `init.sql` for an example schema)
 -   A user access token with scopes: `chat:read chat:edit moderator:manage:chat_messages`
 -   An HTTPS endpoint (you can use [ngrok](https://ngrok.com/) to simplify this)
+-   A 7TV profile linked to the bot account
 
 ### Configuration
 
 Copy the example .env file to `.env`.
 
 Fill the .env with your authorization details:
+
+NOTE: You can get your 7TV GQL token by logging in with your bot account and typing `window.localStorage["7tv-token"]` in the browser console
 
 ```sh
 # Twitch app details
@@ -37,6 +40,9 @@ CLIENT_SECRET="abc123"
 # Bot user details
 USER_TOKEN="abc123"
 BOT_USERNAME="linnebot"
+
+# 7TV GQL token
+SEVENTV_GQL="abcdefgh12345678"
 
 # EventSub details
 BASE_URL="https://example.com"
