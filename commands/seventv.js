@@ -277,7 +277,7 @@ export default {
             description: [
                 'Steal the emote named "buh" from PSP1G\'s chat and add it to the current chat',
             ],
-            command: "#7tv yoink buh psp1g",
+            command: "#7tv yoink psp1g buh",
             response: "@linneb, Added emote buh from psp1g",
         },
         {
