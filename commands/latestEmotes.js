@@ -20,7 +20,7 @@ export default {
             }
         }
         const emotes = await seventv
-            .getEmoteSet(userid)
+            .getEmotes(userid)
             .then((emotes) => emotes.slice(-5));
         if (emotes.length === 0) {
             return {
@@ -31,16 +31,12 @@ export default {
         const actors = new Set();
         emotes.map((emote) => actors.add(emote.actor_id));
 
-        const requests = [...actors].map((actor) => {
-            return seventv.axios({
-                method: "get",
-                url: `/users/${actor}`,
-            });
-        });
-        const sevenTVIDs = await Promise.all(requests).then((responses) => {
+        const users = [...actors].map((actor) => seventv.getUser(actor));
+
+        const sevenTVIDs = await Promise.all(users).then((users) => {
             const output = {};
-            for (const res of responses) {
-                output[res.data.id] = res.data.display_name;
+            for (const user of users) {
+                output[user.id] = user.display_name;
             }
             return output;
         });
