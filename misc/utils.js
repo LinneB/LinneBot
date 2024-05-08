@@ -68,6 +68,10 @@ export function makeStreamOnlineMessages(streamMessage, users) {
     return messages;
 }
 
+export function formatInt(number) {
+    return number.toLocaleString();
+}
+
 export default {
     timeDifference,
     formattedTimeAgoString,

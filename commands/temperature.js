@@ -1,6 +1,4 @@
-const format = (num) => {
-    return num.toLocaleString("en-US");
-};
+import { formatInt } from "../misc/utils.js";
 
 export default {
     name: "temperature",
@@ -32,14 +30,14 @@ export default {
             const temp_c = input;
             const temp_f = (temp_c * 9) / 5 + 32;
             return {
-                reply: `${format(temp_c)}°C is ${format(temp_f)}°F`,
+                reply: `${formatInt(temp_c)}°C is ${formatInt(temp_f)}°F`,
             };
         }
         if (ctx.command === "ftoc") {
             const temp_f = input;
             const temp_c = ((temp_f - 32) * 5) / 9;
             return {
-                reply: `${format(temp_f)}°F is ${format(temp_c)}°C`,
+                reply: `${formatInt(temp_f)}°F is ${formatInt(temp_c)}°C`,
             };
         }
     },

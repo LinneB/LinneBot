@@ -1,3 +1,5 @@
+import { formatInt } from "../misc/utils.js";
+
 function getExperienceForLevel(level) {
     let points = 0;
     let output = 0;
@@ -68,20 +70,12 @@ export default {
                 if (input <= 99) {
                     const progress = `${((inputXP / maxXP) * 100).toFixed(2)}%`;
                     return {
-                        reply: `Level ${input} (${inputXP.toLocaleString(
-                            "en-US",
-                        )} xp) is ${progress} of level 99 (${maxXP.toLocaleString(
-                            "en-US",
-                        )} xp)`,
+                        reply: `Level ${input} (${formatInt(inputXP)} xp) is ${progress} of level 99 (${formatInt(maxXP)} xp)`,
                     };
                 }
                 const progress = `${((input / maxXP) * 100).toFixed(2)}%`;
                 return {
-                    reply: `${input.toLocaleString(
-                        "en-US",
-                    )} xp (level ${inputLevel}) is ${progress} of level 99 (${maxXP.toLocaleString(
-                        "en-US",
-                    )} xp)`,
+                    reply: `${formatInt(input)} xp (level ${inputLevel}) is ${progress} of level 99 (${formatInt(maxXP)} xp)`,
                 };
             }
             case "tax": {
@@ -99,10 +93,9 @@ export default {
                 }
                 if (input >= 2 ** 32 / 2) {
                     return {
-                        reply: `The max GE sell price is ${(
-                            2 ** 32 /
-                            2
-                        ).toLocaleString("en-US")}gp.`,
+                        reply: `The max GE sell price is ${formatInt(
+                            2 ** 32 / 2,
+                        )}gp.`,
                     };
                 }
 
@@ -110,9 +103,7 @@ export default {
                 const tax = Math.min(Math.floor(input / 100), maxTax);
                 const finalPrice = input - tax;
                 return {
-                    reply: `${finalPrice.toLocaleString("en-US")} (${input.toLocaleString(
-                        "en-US",
-                    )} - ${tax.toLocaleString("en-US")})`,
+                    reply: `${formatInt(finalPrice)} (${formatInt(input)} - ${formatInt(tax)})`,
                 };
             }
             default: {

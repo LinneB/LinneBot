@@ -1,3 +1,4 @@
+import { formatInt } from "../misc/utils.js";
 import ivr from "../providers/ivr.js";
 
 export default {
@@ -14,7 +15,7 @@ export default {
 
         const user = await ivr.getUser(username);
         if (user) {
-            const followers = user.followers.toLocaleString("en-US");
+            const followers = formatInt(user.followers);
             return {
                 reply: `${user.displayName} has ${followers} followers`,
             };
