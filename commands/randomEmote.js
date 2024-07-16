@@ -21,7 +21,7 @@ export default {
             amount = Number.parseInt(ctx.parameters[0]);
             if (Number.isNaN(amount)) {
                 return {
-                    reply: `Amount is not a amountber. Usage: ${this.usage}`,
+                    reply: `Amount is not a number. Usage: ${this.usage}`,
                 };
             }
             if (amount > 10) {
