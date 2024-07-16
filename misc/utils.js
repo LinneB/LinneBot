@@ -48,6 +48,22 @@ export function randomNumber(min, max) {
     );
 }
 
+export function randomNumbersUnique(min, max, n) {
+    if (max < n) {
+        n = max;
+    }
+    let output = [];
+    while (output.length < n) {
+        const num =
+            Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) +
+            Math.ceil(min);
+        if (!output.includes(num)) {
+            output.push(num);
+        }
+    }
+    return output;
+}
+
 export function randomElementInArray(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -77,6 +93,7 @@ export default {
     formattedTimeAgoString,
     truncateString,
     randomNumber,
+    randomNumbersUnique,
     randomElementInArray,
     makeStreamOnlineMessages,
 };
